@@ -2,7 +2,11 @@ import mongoose from 'mongoose'
 const Schema = mongoose.Schema
 
 const hospitelSchema = new Schema({
-  userID: {
+  userEmail: {
+    type: String,
+    required: true,
+  },
+  userPassword: {
     type: String,
     required: true,
   },
@@ -10,7 +14,11 @@ const hospitelSchema = new Schema({
     type: String,
     required: true,
   },
-  price: {
+  maxPrice: {
+    type: Number,
+    required: true,
+  },
+  minPrice: {
     type: Number,
     required: true,
   },
@@ -18,6 +26,10 @@ const hospitelSchema = new Schema({
     type: String,
   },
   province: {
+    type: String,
+    required: true,
+  },
+  district: {
     type: String,
     required: true,
   },

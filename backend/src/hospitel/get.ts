@@ -7,6 +7,6 @@ export async function getHostpitels() {
 
 export async function getHostpitelbyID(req: any) {
   const id = req.params
-  const resp = await Hospitel.findById(id).exec()
+  const resp = await Hospitel.findById(id)
   return resp
 }
