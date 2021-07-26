@@ -1,0 +1,51 @@
+@tailwind base;
+
+@tailwind components;
+
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
+
+html body {
+  margin: 0;
+  font-size: 16px;
+  font-family: 'Sarabun', sans-serif;
+  overscroll-behavior: none;
+  scroll-behavior: smooth;
+}
+
+body.dark-bg {
+  background-color: #272729;
+}
+
+* {
+  outline: none !important;
+  box-sizing: border-box;
+}
+
+a,
+a:focus,
+a:visited,
+a:hover {
+  text-decoration: none;
+}
+
+svg text {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+svg text::selection {
+  background: none;
+}
+
+#nprogress .bar {
+  background: #ea5771 !important;
+  height: 4px !important;
+}
+
+#nprogress .peg {
+  box-shadow: 0 0 10px #ea5771, 0 0 5px #ea5771 !important;
+}
