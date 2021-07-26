@@ -71,7 +71,7 @@ export const GoogleMapContent = ({
   }, []);
 
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: 'AIzaSyDFFrPIRs4WmvA9gHls8igdADYvh6ThAOE',
+    googleMapsApiKey: 'GOOGLE_MAP_API_KEY',
     libraries: ["drawing", "places"],
     language: "th"
   })
