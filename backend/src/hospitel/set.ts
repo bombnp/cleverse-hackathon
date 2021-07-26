@@ -4,6 +4,8 @@ export async function setHostpitel(req: any) {
     userEmail: req.body.userEmail,
     userPassword: req.body.userPassword,
     name: req.body.name,
+    totalRooms: req.body.totalRooms,
+    availableRooms: req.body.availableRooms,
     minPrice: req.body.minPrice,
     maxPrice: req.body.maxPrice,
     imageUrl: req.body.url,
@@ -12,6 +14,7 @@ export async function setHostpitel(req: any) {
     address: req.body.address,
     latitude: req.body.latitude,
     longitude: req.body.longitude,
+    createdAt: Date.now(),
   })
 
   const res = await hospitel.save()

@@ -14,6 +14,14 @@ const hospitelSchema = new Schema({
     type: String,
     required: true,
   },
+  totalRooms: {
+    type: Number,
+    required: true,
+  },
+  availableRooms: {
+    type: Number,
+    required: true,
+  },
   maxPrice: {
     type: Number,
     required: true,
@@ -43,6 +51,12 @@ const hospitelSchema = new Schema({
   longitude: {
     type: Number,
     required: true,
+  },
+  createdAt: {
+    type: Date,
+  },
+  updatedAt: {
+    type: Date,
   },
 })
 
