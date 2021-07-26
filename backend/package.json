@@ -4,12 +4,17 @@
   "main": "index.ts",
   "license": "MIT",
   "scripts": {
+    "dev": "nodemon src/index.ts",
     "build": "tsc",
-    "start": "tsc & node dist/index.js",
-    "dev": "ts-node ./src/index.ts"
+    "format": "yarn prettier && yarn lint:fix"
   },
   "dependencies": {
-    "express": "^4.17.1"
+    "@types/dotenv": "^8.2.0",
+    "@types/mongoose": "^5.11.97",
+    "express": "^4.17.1",
+    "mongoose": "^5.13.3",
+    "nodemon": "^2.0.12",
+    "package.json": "^2.0.1"
   },
   "devDependencies": {
     "@types/express": "^4.17.13",
