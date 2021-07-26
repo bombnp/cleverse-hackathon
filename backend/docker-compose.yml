@@ -1,0 +1,11 @@
+version: '3.9'
+
+services:
+  mongo:
+    image: mongo:latest
+    container_name: cleverse-hackathon-mongo
+    restart: unless-stopped
+    volumes:
+      - ./volumes/mongo:/data/db
+    ports:
+      - 27017:27017
