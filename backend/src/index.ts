@@ -1,21 +1,17 @@
 import express from 'express'
 import mongoose from 'mongoose'
+import { MONGO_URI, PORT } from './config'
 
 const app = express()
-const port = 3000
 
 app.get('/', (req, res) => {
   res.status(200).send('Hello, World!')
 })
 
-app.listen(port, () => console.log(`App running on port ${port}`))
 mongoose
-  .connect(
-    'mongodb+srv://dbuser:fbUserPassword@cluster0.wmsog.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
-    { useNewUrlParser: true, useUnifiedTopology: true },
-  )
+  .connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then((result) => {
-    app.listen(port, () => console.log(`App running on port ${port}`))
+    app.listen(PORT, () => console.log(`App running on port ${PORT}`))
   })
   .catch((err) => {
     console.log(err)
