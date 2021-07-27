@@ -10,7 +10,7 @@ export const GoogleMapHospitelFilterBox = () => {
   const province_api =
     "https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_province.json";
   const district_api =
-    "https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_district.json";
+    "https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_amphure.json";
   const options = [
     { label: "ว่างมาก", value: "Empty", color: "#11B418" },
     { label: "ใกล้เต็ม", value: "AlmostFull", color: "#F0CC12" },

@@ -19,7 +19,9 @@ export const NotificationModal = () => {
     const handleSubmitForm = () => {
         const value = emailForm.getFieldsValue();
         console.log(value);
+        setIsModalVisible(false);
         emailForm.resetFields();
+
     }
 
   return (
@@ -49,7 +51,9 @@ export const NotificationModal = () => {
                   <div>โดยท่านสามารถกรอกอีเมลในช่องว่าง</div>
                   <Form
                       form={emailForm}
-                      onFinish={() => setIsModalVisible(false)}
+                      onFinish={() => {
+                          setIsModalVisible(false);
+                      }}
                   >
                     <Form.Item
                         label="อีเมล"
@@ -70,7 +74,7 @@ export const NotificationModal = () => {
                             <PrimaryButton
                                 htmlType="submit"
                                 className="text-white ml-3"
-                                onClick={() => handleSubmitForm}
+                                onClick={handleSubmitForm}
                             >
                                 ยืนยัน
                             </PrimaryButton>
