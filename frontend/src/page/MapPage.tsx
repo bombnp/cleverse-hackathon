@@ -1,6 +1,7 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { GoogleMapDrawer } from '../components/GoogleMapDrawer';
 import { GoogleMapContent } from '../components/map/GoogleMapContent';
+import { LoginModal } from '../components/LoginModal';
 
 export const MapPage = () => {
     const [visible, setVisible] = useState(false);
@@ -10,6 +11,7 @@ export const MapPage = () => {
         <div>
             <GoogleMapContent setVisible={setVisible} setDistance={setDistance} setDuration={setDuration}/>
             <GoogleMapDrawer visible={visible} setVisible={setVisible} distance={distance} duration={duration}/>
+            <LoginModal />
         </div>
     )
 }

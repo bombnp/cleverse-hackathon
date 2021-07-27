@@ -1,8 +1,16 @@
-import React, { useState, useCallback } from 'react'
+/** @jsxRuntime classic */
+/** @jsx jsx */
+
+import { Global, css, jsx } from '@emotion/react';
+import React, { useState } from 'react'
 import ReactDOM from 'react-dom';
+import { ReactComponent as SearchIcon } from '../../assets/search-icon.svg';
 import { GoogleMapHospitelFilterBox } from '../GoogleMapHospitelFilterBox';
-import { useLoadScript, GoogleMap, StandaloneSearchBox, Marker, DirectionsService, DirectionsRenderer, DistanceMatrixService } from '@react-google-maps/api';
-import { Spin} from 'antd';
+import { useLoadScript, GoogleMap, StandaloneSearchBox, Marker, DistanceMatrixService } from '@react-google-maps/api';
+import { Spin, Input } from 'antd';
+import {
+  NotificationModal
+} from '../NotificationModal';
 declare const google: any;
 
 export type SearchBoxType= {
@@ -21,29 +29,24 @@ export const GoogleMapContent = ({
   setDuration
 }: GooogleMapContentProps) => {
   const [myLocation, setMyLocation] = useState<google.maps.LatLng>();
-  const [response, setResponse] = useState<google.maps.DirectionsResult>();
   const [searchBox, setSearchBox] = useState<any>(null);
-  const [center, setCenter] = useState<google.maps.LatLng>();
+  const [ center, setCenter ] = useState<google.maps.LatLng>();
+  const [ selectedLocation, setSelectedLocation ] = useState<google.maps.LatLng>()
   const [map, setMap] = useState(null);
+
+  const calculateRoom = (value:number) => {
+    var percentage = (value / 100) * 100;
+    if (percentage === 0) {
+      return `#BFBFBF`;
+    } else if (percentage <= 30) {
+      return `#F0CC12`;
+    } else {
+      return `#11B418`;
+    }
+  }
 
   const onPlacesChanged = () => {
     const newLocation = searchBox.getPlaces();
-    var findNearLocation = new google.maps.LatLng(newLocation[0].geometry.location.lat(), newLocation[0].geometry.location.lng());
-
-      var request = {
-        location: findNearLocation,
-        radius: '2000',
-        type: ['hospital']
-      };
-
-      let service = new google.maps.places.PlacesService(map);
-      service.nearbySearch(request, (results: any, status: string) => {
-        if (status === google.maps.places.PlacesServiceStatus.OK) {
-          for (var i = 0; i < results.length; i++) {
-            console.log(results[i])
-          }
-        }
-      });
     setCenter(newLocation[0].geometry.location);
   }
 
@@ -53,31 +56,37 @@ export const GoogleMapContent = ({
 
   const onLoad = (ref: any) => {
     setMap(ref);
+    const notificationDiv = document.createElement('div');
     const controlButtonDiv = document.createElement('div');
+
+    ReactDOM.render(<NotificationModal />, notificationDiv);
     ReactDOM.render(<GoogleMapHospitelFilterBox />, controlButtonDiv);
-    ref.controls[google.maps.ControlPosition.RIGHT_CENTER].push(controlButtonDiv);
+    ref.controls[google.maps.ControlPosition.TOP_RIGHT].push(notificationDiv);
+    ref.controls[google.maps.ControlPosition.RIGHT_TOP].push(controlButtonDiv);
     navigator.geolocation.getCurrentPosition(function (position) {
-          let location = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-          setMyLocation(location);
-      });
+        let location = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+        setMyLocation(location);
+    });
   }
 
-  const directionsCallback = useCallback((response) => {
-    if (response !== null) {
-      if (response.status === 'OK') {
-        setResponse(response)
-      }
-    }
-  }, []);
-
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: 'GOOGLE_MAP_API_KEY',
+    googleMapsApiKey: 'AIzaSyDFFrPIRs4WmvA9gHls8igdADYvh6ThAOE',
     libraries: ["drawing", "places"],
     language: "th"
   })
 
   return (
     isLoaded ?
+      <div>
+        <Global
+        styles={css`
+          .ant-input-affix-wrapper {
+            background-color: white;
+            margin-top: 7px;
+            border-radius: 30px;
+          }
+        `}
+      />  
       <GoogleMap
         mapContainerStyle={{ height: '100vh', width: '100vw' }}
         onLoad={(map) => onLoad(map)}
@@ -85,22 +94,26 @@ export const GoogleMapContent = ({
         zoom={19}
         onClick={(e) => console.log(e.latLng.lat(), e.latLng.lng())}
       >
+        <Marker position={myLocation as google.maps.LatLng} />
         <Marker
-          position={myLocation as google.maps.LatLng}
-          onClick={() => setVisible(true)}
+          position={center as google.maps.LatLng}
+          onClick={() => {
+            setVisible(true)
+            setSelectedLocation(myLocation);
+          }}
           onLoad={marker => {
                 const customIcon = (opts:any) => Object.assign({
-                  path: 'M 0,0 C -2,-20 -10,-22 -10,-30 A 10,10 0 1,1 10,-30 C 10,-22 2,-20 0,0 z',
+                  path: 'M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z',
                   fillColor: '#34495e',
                   fillOpacity: 1,
                   strokeColor: '#000',
                   strokeWeight: 1,
-                  scale: 1,
+                  scale: 1.5,
                 }, opts);
               
             marker.setIcon(customIcon({
-              fillColor: 'green',
-              strokeColor: 'white'
+              fillColor: `${calculateRoom(22)}` ,
+              strokeColor: '#000000'
             }));
           }}
         />
@@ -108,30 +121,30 @@ export const GoogleMapContent = ({
             onPlacesChanged={onPlacesChanged}
             onLoad={onSBLoad}
           >
-            <input
+          {/* <Input className="w-72 absolute right-16 shadow-lg" onPressEnter={() => console.log('x')} prefix={<SearchIcon />} placeholder="search location..."/> */}
+          <input
               type="text"
-              placeholder="Customized your placeholder"
-              style={{
+            placeholder="search location..."
+            style={{
                 boxSizing: 'border-box',
                 border: `1px solid transparent`,
-                width: `270px`,
+                width: `300px`,
                 height: `40px`,
-                borderRadius: `3px`,
+                borderRadius: `30px`,
                 boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
                 fontSize: `14px`,
                 outline: `none`,
-                margin: 'center',
-                top: '10px',
+                top: '7px',
                 textOverflow: `ellipses`,
                 position: 'absolute',
                 right: '70px',
                 padding: '0 5px'
               }}
-            />
+              />
           </StandaloneSearchBox>
         <DistanceMatrixService
           options={{
-            destinations: [center as google.maps.LatLng],
+            destinations: [selectedLocation as google.maps.LatLng],
             origins: [myLocation as google.maps.LatLng],
             travelMode: 'DRIVING' as google.maps.TravelMode,
           }}
@@ -140,34 +153,8 @@ export const GoogleMapContent = ({
               setDistance(response.rows[0].elements[0].distance.text);
               setDuration(response.rows[0].elements[0].duration.text);  
             }
-            
           }}
         />
-            {
-              (
-                searchBox !== undefined &&
-                myLocation !== undefined
-              ) && (
-                <DirectionsService
-                  options={{
-                    destination: center,
-                    origin: myLocation,
-                    travelMode: 'DRIVING' as google.maps.TravelMode
-                  }}
-                  callback={directionsCallback}
-                />
-              )
-            }
-
-            {
-              response !== null && (
-                <DirectionsRenderer
-                  options={{
-                    directions: response as google.maps.DirectionsResult
-                  }}
-                />
-              )
-        }
-      </GoogleMap> : <><Spin /></>
+      </GoogleMap></div> : <div><Spin /></div>
     )
 };
