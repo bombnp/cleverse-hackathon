@@ -2,6 +2,7 @@ import express from 'express'
 import mongoose from 'mongoose'
 import { MONGO_URI, PORT } from './config'
 import hospitelRouter from './routes/hospitel'
+import subscriptionRouter from './routes/subscription'
 
 const app = express()
 
@@ -10,6 +11,7 @@ app.get('/', (req, res) => {
 })
 
 app.use('/hospitels', hospitelRouter)
+app.use('/subscription', subscriptionRouter)
 
 mongoose
   .connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
