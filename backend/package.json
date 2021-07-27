@@ -9,18 +9,27 @@
     "format": "yarn prettier && yarn lint:fix"
   },
   "dependencies": {
+    "@types/bcrypt": "^5.0.0",
     "@types/dotenv": "^8.2.0",
+    "@types/express-jwt": "^6.0.2",
     "@types/mongoose": "^5.11.97",
     "axios": "^0.21.1",
+    "bcrypt": "^5.0.1",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.13.3",
     "nodemon": "^2.0.12",
-    "package.json": "^2.0.1"
+    "package.json": "^2.0.1",
+    "passport": "^0.4.1",
+    "passport-jwt": "^4.0.0"
   },
   "devDependencies": {
     "@types/express": "^4.17.13",
+    "@types/jsonwebtoken": "^8.5.4",
     "@types/node": "^16.4.2",
+    "@types/passport": "^1.0.7",
+    "@types/passport-jwt": "^3.0.6",
     "@typescript-eslint/eslint-plugin": "^4.28.4",
     "@typescript-eslint/parser": "^4.28.4",
     "eslint": "^7.31.0",

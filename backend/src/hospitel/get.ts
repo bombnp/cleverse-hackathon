@@ -1,4 +1,3 @@
-import { Request } from 'express'
 import { Hospitel } from './schema'
 
 export async function getHostpitels() {
@@ -6,8 +5,7 @@ export async function getHostpitels() {
   return hospitels
 }
 
-export async function getHostpitelbyID(req: Request) {
-  const id = req.params['_id']
+export async function getHostpitelbyID(id: string) {
   const hospitel = await Hospitel.findById(id)
   return hospitel
 }

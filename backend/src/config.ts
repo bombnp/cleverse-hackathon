@@ -6,3 +6,5 @@ export const PORT = process.env.PORT
 
 export const ONESIGNAL_APP_ID = process.env.ONESIGNAL_APP_ID
 export const ONESIGNAL_AUTH_TOKEN = process.env.ONESIGNAL_AUTH_TOKEN
+
+export const JWT_SECRET = process.env.JWT_SECRET
