@@ -1,3 +1,4 @@
+import bcrypt from 'bcrypt'
 import { Hospitel, HospitelDocument } from 'src/hospitel/schema'
 
 export interface RegisterDTO {
@@ -16,6 +17,8 @@ export interface RegisterDTO {
   longitude: number
 }
 
+const saltRounds = 12
+
 export async function register(
   registerDTO: RegisterDTO,
 ): Promise<HospitelDocument> {
@@ -25,9 +28,11 @@ export async function register(
   if (hospitel) {
     throw { status: 404, message: 'hospitel with this email already exists' }
   }
+
+  const hashedPassword = bcrypt.hashSync(registerDTO.userPassword, saltRounds)
   const newHospitel = new Hospitel({
     userEmail: registerDTO.userEmail,
-    userPassword: registerDTO.userPassword,
+    userPassword: hashedPassword,
     name: registerDTO.name,
     totalRooms: registerDTO.totalRooms,
     availableRooms: registerDTO.availableRooms,
@@ -42,5 +47,7 @@ export async function register(
   })
 
   await newHospitel.save()
+  newHospitel.set('userPassword', undefined)
+  console.log(newHospitel)
   return newHospitel
 }

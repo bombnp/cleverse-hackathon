@@ -1,3 +1,4 @@
+import bcrypt from 'bcrypt'
 import { Hospitel } from 'src/hospitel/schema'
 import { signJWT } from './jwt'
 
@@ -9,10 +10,14 @@ export interface LoginDTO {
 export async function login({ email, password }: LoginDTO): Promise<string> {
   const hospitel = await Hospitel.findOne({
     userEmail: email,
-    userPassword: password,
-  })
+  }).select('userPassword')
   if (!hospitel) {
-    throw new Error("can't find hospitel")
+    throw { status: 404, message: "can't find email" }
   }
+
+  if (!bcrypt.compareSync(password, hospitel.userPassword)) {
+    throw { status: 400, message: 'invalid password' }
+  }
+
   return signJWT({ userId: hospitel._id })
 }
