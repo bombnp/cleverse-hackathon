@@ -60,6 +60,24 @@ const hospitelSchema = new Schema({
   },
 })
 
-const Hospitel = mongoose.model('Hospitel', hospitelSchema)
+export type HospitelDocument = mongoose.Document & {
+  userEmail: string
+  userPassword: string
+  name: string
+  totalRooms: number
+  availableRooms: number
+  maxPrice: number
+  minPrice: number
+  imageUrl?: string
+  province: string
+  district: string
+  address?: string
+  latitude: number
+  longitude: number
+  createdAt: Date
+  updatedAt: Date
+}
+
+const Hospitel = mongoose.model<HospitelDocument>('Hospitel', hospitelSchema)
 
 export { Hospitel }
