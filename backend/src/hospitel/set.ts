@@ -33,7 +33,6 @@ export async function createHospitel(req: Request<{}, {}, CreateHospitelDTO>) {
     address: body.address,
     latitude: body.latitude,
     longitude: body.longitude,
-    createdAt: Date.now(),
   })
 
   const res = await hospitel.save()
