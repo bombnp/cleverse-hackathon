@@ -47,7 +47,9 @@ export const GoogleMapContent = ({
 
   const onPlacesChanged = () => {
     const newLocation = searchBox.getPlaces();
-    setCenter(newLocation[0].geometry.location);
+    if (newLocation[0] !== undefined) {
+      setCenter(newLocation[0].geometry.location);
+    }
   }
 
   const onSBLoad = (ref: any) => {
