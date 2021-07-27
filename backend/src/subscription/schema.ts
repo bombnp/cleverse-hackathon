@@ -19,6 +19,16 @@ const subscriptionSchema = new Schema({
   },
 })
 
-const Subscription = mongoose.model('Subscription', subscriptionSchema)
+export type SubscriptionDocument = mongoose.Document & {
+  userEmail: string
+  latitude: number
+  longitude: number
+  createdAt: Date
+}
+
+const Subscription = mongoose.model<SubscriptionDocument>(
+  'Subscription',
+  subscriptionSchema,
+)
 
 export { Subscription }
