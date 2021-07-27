@@ -1,6 +1,7 @@
 import express from 'express'
 import mongoose from 'mongoose'
 import { MONGO_URI, PORT } from './config'
+import authRouter from './routes/auth'
 import hospitelRouter from './routes/hospitel'
 import subscriptionRouter from './routes/subscription'
 
@@ -10,6 +11,7 @@ app.get('/', (req, res) => {
   res.status(200).send('Hello, World!')
 })
 
+app.use('/auth', authRouter)
 app.use('/hospitels', hospitelRouter)
 app.use('/subscription', subscriptionRouter)
 

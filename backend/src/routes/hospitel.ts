@@ -1,6 +1,5 @@
 import express from 'express'
-import jwt from 'express-jwt'
-import { JWT_SECRET } from 'src/config'
+import passport from 'passport'
 import { getHostpitelbyID, getHostpitels } from 'src/hospitel/get'
 import { createHospitel } from 'src/hospitel/set'
 
@@ -14,7 +13,8 @@ router.get('/', async (req, res) => {
 })
 
 router.get('/:_id', async (req, res) => {
-  const resp = await getHostpitelbyID(req)
+  const id = req.params['_id']
+  const resp = await getHostpitelbyID(id)
   res.status(200).send(resp)
 })
 
@@ -24,6 +24,6 @@ router.post('/', async (req, res) => {
 })
 
 // routes below this are protected
-router.use(jwt({ secret: JWT_SECRET, algorithms: ['HS256'] }))
+router.use(passport.authenticate('jwt', { session: false }))
 
 export default router

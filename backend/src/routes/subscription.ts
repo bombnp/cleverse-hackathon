@@ -1,6 +1,5 @@
 import express from 'express'
-import jwt from 'express-jwt'
-import { JWT_SECRET } from 'src/config'
+import passport from 'passport'
 import { setSubscription } from 'src/subscription/set'
 const router = express.Router()
 router.use(express.json())
@@ -16,6 +15,6 @@ router.post('/', async (req, res) => {
 })
 
 // routes below this are protected
-router.use(jwt({ secret: JWT_SECRET, algorithms: ['HS256'] }))
+router.use(passport.authenticate('jwt', { session: false }))
 
 export default router
