@@ -1,13 +1,13 @@
+import { Request } from 'express'
 import { Hospitel } from './schema'
-import { sanitizeHospitel, sanitizeHospitels } from './util'
 
 export async function getHostpitels() {
   const hospitels = await Hospitel.find()
-  return sanitizeHospitels(hospitels)
+  return hospitels
 }
 
-export async function getHostpitelbyID(req: any) {
-  const id = req.params
+export async function getHostpitelbyID(req: Request) {
+  const id = req.params['_id']
   const hospitel = await Hospitel.findById(id)
-  return sanitizeHospitel(hospitel)
+  return hospitel
 }

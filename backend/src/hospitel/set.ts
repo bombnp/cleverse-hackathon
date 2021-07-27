@@ -1,19 +1,38 @@
+import { Request } from 'express'
 import { Hospitel } from './schema'
-export async function setHostpitel(req: any) {
+
+interface CreateHospitelDTO {
+  userEmail: string
+  userPassword: string
+  name: string
+  totalRooms: number
+  availableRooms: number
+  maxPrice: number
+  minPrice: number
+  imageUrl?: string
+  province: string
+  district: string
+  address?: string
+  latitude: number
+  longitude: number
+}
+
+export async function createHospitel(req: Request<{}, {}, CreateHospitelDTO>) {
+  const body = req.body
   const hospitel = new Hospitel({
-    userEmail: req.body.userEmail,
-    userPassword: req.body.userPassword,
-    name: req.body.name,
-    totalRooms: req.body.totalRooms,
-    availableRooms: req.body.availableRooms,
-    minPrice: req.body.minPrice,
-    maxPrice: req.body.maxPrice,
-    imageUrl: req.body.url,
-    province: req.body.province,
-    district: req.body.district,
-    address: req.body.address,
-    latitude: req.body.latitude,
-    longitude: req.body.longitude,
+    userEmail: body.userEmail,
+    userPassword: body.userPassword,
+    name: body.name,
+    totalRooms: body.totalRooms,
+    availableRooms: body.availableRooms,
+    minPrice: body.minPrice,
+    maxPrice: body.maxPrice,
+    imageUrl: body.imageUrl,
+    province: body.province,
+    district: body.district,
+    address: body.address,
+    latitude: body.latitude,
+    longitude: body.longitude,
     createdAt: Date.now(),
   })
 

@@ -9,6 +9,7 @@ const hospitelSchema = new Schema({
   userPassword: {
     type: String,
     required: true,
+    select: false,
   },
   name: {
     type: String,
