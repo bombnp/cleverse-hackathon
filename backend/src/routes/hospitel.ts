@@ -1,6 +1,6 @@
 import express from 'express'
-import { getHostpitelbyID, getHostpitels } from '../hospitel/get'
-import { createHospitel } from '../hospitel/set'
+import { getHostpitelbyID, getHostpitels } from 'src/hospitel/get'
+import { createHospitel } from 'src/hospitel/set'
 const router = express.Router()
 router.use(express.json())
 router.use(express.urlencoded({ extended: true }))

@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { ONESIGNAL_APP_ID, ONESIGNAL_AUTH_TOKEN } from '../config'
+import { ONESIGNAL_APP_ID, ONESIGNAL_AUTH_TOKEN } from 'src/config'
 
 export async function sendEmail(recipient: [string]) {
   let axiosConfig = {

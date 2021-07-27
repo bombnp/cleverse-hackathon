@@ -1,5 +1,5 @@
 import express from 'express'
-import { setSubscription } from '../subscription/set'
+import { setSubscription } from 'src/subscription/set'
 const router = express.Router()
 router.use(express.json())
 router.use(express.urlencoded({ extended: true }))
