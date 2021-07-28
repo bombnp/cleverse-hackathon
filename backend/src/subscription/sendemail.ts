@@ -13,8 +13,10 @@ export async function sendEmail(recipient: string[]) {
       'https://onesignal.com/api/v1/notifications',
       {
         app_id: ONESIGNAL_APP_ID,
-        email_subject: 'test',
-        email_body: '<h1>test</h1>',
+        email_from_name: 'HackatonA',
+        email_from_address: 'hackaton_cleverse.a@outlook.com',
+        email_subject: 'For test backend',
+        email_body: '<h1>Hello!</h1>',
         include_email_tokens: recipient,
       },
       axiosConfig,
