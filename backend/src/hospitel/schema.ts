@@ -38,7 +38,7 @@ const hospitelSchema = new Schema(
         required: true,
       },
     },
-    imageUrl: {
+    imageUrls: {
       type: [String],
     },
     documentUrl: {
@@ -105,7 +105,7 @@ export type HospitelDocument = mongoose.Document & {
     minPrice: number
     perDays: number
   }
-  imageUrl?: string
+  imageUrls?: string[]
   documentUrl?: string
   address: {
     province: string

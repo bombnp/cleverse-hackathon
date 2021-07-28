@@ -13,7 +13,7 @@ export interface RegisterDTO {
     minPrice: number
     perDays: number
   }
-  imageUrl?: string
+  imageUrls?: string[]
   documentUrl?: string
   address: {
     province: string
@@ -60,7 +60,7 @@ export async function register(
       maxPrice: registerDTO.price.maxPrice,
       perDays: registerDTO.price.perDays,
     },
-    imageUrl: registerDTO.imageUrl,
+    imageUrls: registerDTO.imageUrls,
     documentUrl: registerDTO.documentUrl,
     address: {
       province: registerDTO.address.province,
