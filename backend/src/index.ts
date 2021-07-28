@@ -5,6 +5,7 @@ import { errorHandler } from './errors'
 import authRouter from './routes/auth'
 import hospitelRouter from './routes/hospitel'
 import subscriptionRouter from './routes/subscription'
+import uploadRouter from './routes/upload'
 
 const app = express()
 
@@ -15,6 +16,7 @@ app.get('/', (req, res) => {
 app.use('/auth', authRouter)
 app.use('/hospitels', hospitelRouter)
 app.use('/subscription', subscriptionRouter)
+app.use('/upload', uploadRouter)
 
 // Error handling
 app.use(errorHandler)
