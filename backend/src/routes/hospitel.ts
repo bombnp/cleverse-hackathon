@@ -2,6 +2,7 @@ import express from 'express'
 import passport from 'passport'
 import { getHostpitelbyID, getHostpitels } from 'src/hospitel/get'
 import { updateAvailableRoom } from 'src/hospitel/set'
+import { nearestAlert } from 'src/subscription/utils'
 
 const router = express.Router()
 router.use(express.json())
@@ -20,6 +21,7 @@ router.get('/:_id', async (req, res) => {
 
 router.post('/availablerooms', async (req, res) => {
   const resp = await updateAvailableRoom(req)
+  await nearestAlert()
   res.json(resp)
 })
 
