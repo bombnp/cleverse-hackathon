@@ -6,12 +6,8 @@ router.use(express.json())
 router.use(express.urlencoded({ extended: true }))
 
 router.post('/', async (req, res) => {
-  try {
-    const resp = await setSubscription(req)
-    res.status(200).send(resp)
-  } catch (error) {
-    res.status(500).send(error)
-  }
+  const resp = await setSubscription(req)
+  res.send(resp)
 })
 
 // routes below this are protected

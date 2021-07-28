@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt'
+import { HttpError } from 'src/errors'
 import { Hospitel, HospitelDocument } from 'src/hospitel/schema'
 
 export interface RegisterDTO {
@@ -43,8 +44,9 @@ export async function register(
     userEmail: registerDTO.userEmail,
   })
   if (hospitel) {
-    throw { status: 404, message: 'hospitel with this email already exists' }
+    throw new HttpError(409, 'hospitel with this email already exists')
   }
+  // TODO: validate register request body
 
   const hashedPassword = bcrypt.hashSync(registerDTO.userPassword, saltRounds)
   const newHospitel = new Hospitel({

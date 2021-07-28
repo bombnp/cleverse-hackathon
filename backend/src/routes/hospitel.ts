@@ -8,31 +8,19 @@ router.use(express.json())
 router.use(express.urlencoded({ extended: true }))
 
 router.get('/', async (req, res) => {
-  try {
-    const resp = await getHostpitels()
-    res.status(200).send(resp)
-  } catch (err) {
-    res.status(500).send(err)
-  }
+  const resp = await getHostpitels()
+  res.send(resp)
 })
 
 router.get('/:_id', async (req, res) => {
   const id = req.params['_id']
-  try {
-    const resp = await getHostpitelbyID(id)
-    res.status(200).send(resp)
-  } catch (err) {
-    res.status(500).send(err)
-  }
+  const resp = await getHostpitelbyID(id)
+  res.send(resp)
 })
 
 router.post('/availablerooms', async (req, res) => {
-  try {
-    const resp = await updateAvailableRoom(req)
-    res.status(200).json(resp)
-  } catch (err) {
-    res.status(400).send(err)
-  }
+  const resp = await updateAvailableRoom(req)
+  res.json(resp)
 })
 
 // routes below this are protected
