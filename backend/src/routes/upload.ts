@@ -10,6 +10,7 @@ router.use(express.urlencoded({ extended: true }))
 const upload = multer()
 
 // TODO: add content type validation
+// QUESTION: single or multiple image upload?
 router.post(
   '/image',
   upload.single('file'),
