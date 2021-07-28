@@ -11,8 +11,12 @@ export function errorHandler(
   next: NextFunction,
 ) {
   if (err instanceof HttpError) {
+    if (err.status >= 500) {
+      console.error(err)
+    }
     res.status(err.status).json(err)
   } else {
+    console.error(err)
     res.status(500).json(err)
   }
 }
