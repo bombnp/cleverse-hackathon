@@ -12,24 +12,31 @@ export const UploadHospitelImage = () => {
     const onChange = (e: any) => {
         setUploading(true);
         const files = Array.from(e.target.files);
+
         const formData = new FormData();
-            files.forEach((item:any) => {
+
+        files.forEach((item: any) => {
                 formData.append(
-                    "image",
+                    "file",
                     item,
                     item?.name
                 );
 
             })
-        
-        console.log(image);
 
-        axios.post("https://httpbin.org/anything", formData)
+        const url = "https://6416fcf7f032.ngrok.io/upload/images";
+        const config = {
+            headers: {
+                'content-type': 'multipart/form-data'
+            }
+        }
+        axios.post(url, formData, config)
         .then((res:any) => console.log(res))
-        // .then((images:any) => {
-        //     setUploading(false);
-        //     setImage(images)
-        // })      
+        .then((images:any) => {
+            setUploading(false);
+            setImage(images)
+        })
+        .catch((error) => console.log(error))
     }
 
     const removeImage = (id: string) => {

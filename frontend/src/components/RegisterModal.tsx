@@ -2,8 +2,16 @@ import React, { useState } from "react";
 import { Modal, Input, Button, Form, Select } from "antd";
 import { HospitelLocation } from "./map/HospitelLocation";
 import { HospitalLocation } from './map/HospitalLocation';
+import { PrimaryButton } from './Button';
+import { RegisterConfirmModal } from "./RegisterConfirmModal";
+import { RegisterStep } from './login';
 
-export const RegisterModal = () => {
+
+interface RegisterModalProps {
+    setStep: (step: any) => void;
+}
+
+export const RegisterModal = ({setStep}: RegisterModalProps) => {
   const [isModalVisible, setIsModalVisible] = useState(true);
   const [registerForm] = Form.useForm();
 
@@ -20,9 +28,10 @@ export const RegisterModal = () => {
     } catch (error) {
       console.error(error);
     } finally {
-      registerForm.resetFields();
+    //   registerForm.resetFields();
     }
   };
+    
   return (
     <Modal
       width={1036}
@@ -33,14 +42,20 @@ export const RegisterModal = () => {
       onCancel={() => setIsModalVisible(false)}
       centered
     >
-      <div className=" font-extrabold text-xl ">สมัครสมาชิก Hospitel</div>
-      <Form>
+          <div className=" font-extrabold text-xl ">สมัครสมาชิก Hospitel</div>
+          
+          <Form
+              form={registerForm}
+              onFinish={handleSubmitForm}
+          >
         <div className=" grid grid-cols-3 gap-12 mt-6">
           <div>
+
+                <div className="mb-2 font-bold ">ชื่อ Hospitel</div>
                       <Form.Item
-                          name="hospitelname"
-                >
-              <div className="mb-2 font-bold ">ชื่อ Hospitel</div>
+                        normalize={(value) => value.trim()}
+                        name="name"
+                >                          
               <Input
                 className="w-64 rounded-2xl px-4 pt-4 pb-5"
                 type="text"
@@ -48,10 +63,12 @@ export const RegisterModal = () => {
               />
             </Form.Item>
             <div className="flex">
+
+                              <div className="mb-2  font-bold ">จังหวัด</div>
                           <Form.Item
                               name="province"
-                          >
-                <div className="mb-2  font-bold ">จังหวัด</div>
+                              normalize={(value) => value.trim()}
+                          >                              
                 <Select
                   placeholder="เลือกจังหวัด"
                   size="small"
@@ -62,10 +79,12 @@ export const RegisterModal = () => {
                   </Option>
                 </Select>
               </Form.Item>
+
+                              <div className="ml-5 mb-2  font-bold ">อำเภอ</div>
                           <Form.Item
                               name="district"
-                          >
-                <div className="ml-5 mb-2  font-bold ">อำเภอ</div>
+                              normalize={(value) => value.trim()}
+                          >                              
                 <Select
                   placeholder="เลือกอำเภอ"
                   size="small"
@@ -77,10 +96,12 @@ export const RegisterModal = () => {
                 </Select>
               </Form.Item>
             </div>
+              <div className="mb-2  font-bold ">ที่อยู่</div>
+            
                       <Form.Item
                           name="address"
+                          normalize={(value) => value.trim()}
                       >
-              <div className="mb-2  font-bold ">ที่อยู่</div>
               <Input
                 className="w-64 rounded-2xl my-2 px-4 pt-4 pb-5"
                 type="text"
@@ -88,11 +109,13 @@ export const RegisterModal = () => {
               />
             </Form.Item>
               <div className="mb-2 font-bold ">ราคา</div>
-                      <div className="flex">
+                <div className="flex">
                          
                 <div className="flex items-center justify-center">
                               <Form.Item
-                              name="minPrice">
+                                  name="minPrice"
+                                  normalize={(value) => value.trim()}
+                              >
                                   <Input
                     className="w-20 rounded-2xl mr-4 my-2 px-4 pt-4 pb-5"
                     type="text"
@@ -100,14 +123,14 @@ export const RegisterModal = () => {
                                   />
                   </Form.Item>
                               -
-                              <Form.Item name="maxPrice">
+                              <Form.Item name="maxPrice" normalize={(value) => value.trim()}>
                   <Input
                     className="w-20 rounded-2xl mx-3 my-2 px-4 pt-4 pb-5"
                     type="text"
                     placeholder={"xxxx --xxx"}
                   /></Form.Item>
                           </div>
-                          <Form.Item name="perDays">
+                          <Form.Item name="perDays" normalize={(value) => value.trim()}>
                 <Select
                   defaultValue="ต่อเดือน"
                   style={{ width: 100 }}
@@ -116,8 +139,9 @@ export const RegisterModal = () => {
                   <Option value="ต่อเดือน">ต่อเดือน</Option>
                 </Select></Form.Item>
               </div>
-            <Form.Item name="phone">
-              <div className="mb-2  font-bold ">เบอร์ติดต่อ</div>
+            
+                <div className="mb-2  font-bold ">เบอร์ติดต่อ</div>
+                <Form.Item name="phone" normalize={(value) => value.trim()}>          
               <Input
                 className="w-64 rounded-2xl my-2 px-4 pt-4 pb-5"
                 type="text"
@@ -129,7 +153,7 @@ export const RegisterModal = () => {
                 placeholder={"xxxx --xxx"}
               />
             </Form.Item>
-            <Form.Item name="social">
+            <Form.Item name="social" normalize={(value) => value.trim()}>
               <div className="mb-2  font-bold ">
                 ช่องทางติดต่ออื่นๆ (Facebook, Line ฯลฯ)
               </div>
@@ -146,7 +170,7 @@ export const RegisterModal = () => {
             </Form.Item>
           </div>
           <div>
-            <Form.Item name="imageUrl">
+            <Form.Item name="imageUrl" normalize={(value) => value.trim()}>
               <div className="mb-2  font-bold">
                 อัพโหลดภาพ Hospital (สูงสุด 3 รูป)
               </div>
@@ -167,45 +191,52 @@ export const RegisterModal = () => {
               </div>
             </Form.Item>
             <div className="flex">
-              <Form.Item className="mr-6">
                 <div>
-                  <div className="mb-2  font-bold">จำนวนห้องว่าง</div>
+                                  <div className="mb-2  font-bold">จำนวนห้องว่าง</div>
+              <Form.Item className="mr-6" name="availableRooms" normalize={(value) => value.trim()}>
+                                  
                   <Input
                     className="w-32  rounded-2xl px-4 pt-4 pb-5"
                     placeholder={"xxxx --xxx"}
-                  />
+                                  />
+              </Form.Item>                                  
                 </div>
-              </Form.Item>
-              <Form.Item>
+
+              
                 <div>
-                  <div className="mb-2 font-bold">จำนวนห้องว่างทั้งหมด</div>
+                                  <div className="mb-2 font-bold">จำนวนห้องว่างทั้งหมด</div>
+                    <Form.Item name="totalRooms" normalize={(value) => value.trim()}>              
                   <Input
                     className="w-32  rounded-2xl px-4 pt-4 pb-5"
                     placeholder={"xxxx --xxx"}
-                  />
+                                  />
+                    </Form.Item>              
                 </div>
-              </Form.Item>
+             
             </div>
-            <Form.Item>
+            
               <div>
-                <div className="mb-2 font-bold">หมายเหตุ</div>
+                              <div className="mb-2 font-bold">หมายเหตุ</div>
+                <Form.Item name="note" normalize={(value) => value.trim()}>              
                 <TextArea
                   className="rounded-2xl px-4 pt-4 pb-5"
                   placeholder="Controlled autosize"
                   autoSize={{ minRows: 3, maxRows: 5 }}
-                />
+                              />
+                </Form.Item>              
               </div>
-            </Form.Item>
-            <Form.Item name="facility">
+            
               <div>
-                <div className="mb-2 font-bold">สิ่งอำนวยความสะดวก</div>
+                              <div className="mb-2 font-bold">สิ่งอำนวยความสะดวก</div>
+                <Form.Item name="facility" normalize={(value) => value.trim()}>              
                 <TextArea
                   className="rounded-2xl px-4 pt-4 pb-5"
                   autoSize={{ minRows: 3, maxRows: 5 }}
                   placeholder={"xxxx --xxx"}
-                />
+                              />
+                </Form.Item>              
               </div>
-            </Form.Item>
+            
             <Form.Item>
               <div className="mb-2 font-bold">
                 อัปโหลดเอกสารอนุญาตการเปิด Hospitel
@@ -216,13 +247,14 @@ export const RegisterModal = () => {
               />
             </Form.Item>
           </div>
-          <div className="wrapper-3 ">
+          <div className="wrapper-3">
             <Form.Item>
               <div className="mb-2 font-bold ">สถานที่ของ Hospitel</div>
               <HospitelLocation />
             </Form.Item>
-            <Form.Item>
-              <div className="mb-2 font-bold ">เข้าร่วมกับโรงพยาบาล</div>
+            
+                          <div className="mb-2 font-bold ">เข้าร่วมกับโรงพยาบาล</div>
+                <Form.Item name="coHospital" normalize={(value) => value.trim()}>          
               <Input
                 className="w-64 rounded-2xl px-4 pt-4 pb-5"
                 type="text"
@@ -234,7 +266,15 @@ export const RegisterModal = () => {
               <HospitalLocation />
             </Form.Item>
           </div>
-        </div>
+              </div>
+                                          <PrimaryButton
+                                htmlType="submit"
+                                className="text-white mb-4 ml-2"
+                  type="primary"
+                  onClick={() => {setStep(RegisterStep.CONFIRM)}}
+                            >
+                                ถัดไป
+                            </PrimaryButton>
       </Form>
     </Modal>
   );

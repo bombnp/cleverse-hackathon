@@ -3,3 +3,8 @@ export enum LoginStep {
     LOG_IN = 'login',
     REGISTER = 'register'
 }
+
+export enum RegisterStep {
+    FIELD_DATA = 'field-data',
+    CONFIRM = 'confirm'
+}

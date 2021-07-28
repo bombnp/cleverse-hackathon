@@ -6,6 +6,8 @@ import { Modal, Input, Button, Form } from 'antd';
 import { ReactComponent as NextStepIcon } from '../assets/arrow-right.svg';
 import { ReactComponent as PrevStepIcon } from '../assets/arrow-left.svg';
 import { LoginStep } from './login';
+import { RegisterModal } from './RegisterModal';
+import { RegisterFlow } from './RegisterFlow';
 
 export const LoginModal = () => {
     const [isModalVisible, setIsModalVisible] = useState(true);
@@ -93,13 +95,17 @@ export const LoginModal = () => {
                             >
                                 เข้าสู่ระบบ
                             </Button>
-                            <div className="text-xs flex" onClick={() => setStep(LoginStep.LOG_IN)}>
+                            <div className="text-xs flex" onClick={() => setStep(LoginStep.REGISTER)}>
                                 <div className="text-gray-400">ไม่มีสมาชิกผู้ใช้</div>
                                 <div className="flex ml-1 cursor-pointer">สมัครสมาชิก<NextStepIcon className="mt-1 ml-2" /></div>
                             </div>
                         </div>
                     </div>
                 </Modal>
+            );
+        case LoginStep.REGISTER:
+            return (
+                <RegisterFlow />
             );
         default:
             return (
