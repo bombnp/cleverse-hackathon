@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { ONESIGNAL_APP_ID, ONESIGNAL_AUTH_TOKEN } from 'src/config'
 
-export async function sendEmail(recipient: [string]) {
+export async function sendEmail(recipient: string[]) {
   let axiosConfig = {
     headers: {
       'Content-Type': 'application/json;charset=UTF-8',
