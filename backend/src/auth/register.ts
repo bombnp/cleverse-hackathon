@@ -7,14 +7,31 @@ export interface RegisterDTO {
   name: string
   totalRooms: number
   availableRooms: number
-  maxPrice: number
-  minPrice: number
+  price: {
+    maxPrice: number
+    minPrice: number
+    perDays: number
+  }
   imageUrl?: string
-  province: string
-  district: string
-  address?: string
-  latitude: number
-  longitude: number
+  documentUrl?: string
+  address: {
+    province: string
+    district: string
+    address?: string
+    latitude: number
+    longitude: number
+  }
+  contact: {
+    phone: string[]
+    social: string[]
+  }
+  facility: string
+  note: string
+  coHospital: {
+    name: string
+    latitude: number
+    longitude: number
+  }
 }
 
 const saltRounds = 12
@@ -36,14 +53,31 @@ export async function register(
     name: registerDTO.name,
     totalRooms: registerDTO.totalRooms,
     availableRooms: registerDTO.availableRooms,
-    minPrice: registerDTO.minPrice,
-    maxPrice: registerDTO.maxPrice,
+    price: {
+      minPrice: registerDTO.price.minPrice,
+      maxPrice: registerDTO.price.maxPrice,
+      perDays: registerDTO.price.perDays,
+    },
     imageUrl: registerDTO.imageUrl,
-    province: registerDTO.province,
-    district: registerDTO.district,
-    address: registerDTO.address,
-    latitude: registerDTO.latitude,
-    longitude: registerDTO.longitude,
+    documentUrl: registerDTO.documentUrl,
+    address: {
+      province: registerDTO.address.province,
+      district: registerDTO.address.district,
+      address: registerDTO.address.address,
+      latitude: registerDTO.address.latitude,
+      longitude: registerDTO.address.longitude,
+    },
+    contact: {
+      phone: registerDTO.contact.phone,
+      social: registerDTO.contact.social,
+    },
+    facility: registerDTO.facility,
+    note: registerDTO.note,
+    coHospital: {
+      name: registerDTO.coHospital.name,
+      latitude: registerDTO.coHospital.latitude,
+      longitude: registerDTO.coHospital.longitude,
+    },
   })
 
   await newHospitel.save()
