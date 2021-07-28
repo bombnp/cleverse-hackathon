@@ -4,7 +4,7 @@ import React from 'react';
 export const PrimaryButton = ({ children, className, ...restProps }: any) => (
   <Button
     htmlType="submit"
-    className={`w-20 h-8 rounded-lg text-base bg-blue-500 ${className} border-0`}
+    className={`w-16 h-8 rounded-md text-base bg-blue-500 ${className} border-0`}
     {...restProps}
   >
     {children}

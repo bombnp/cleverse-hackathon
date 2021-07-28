@@ -33,7 +33,16 @@ export const LoginModal = () => {
                     centered
                 >
                     <div className="flex flex-col items-center justify-center">
-                        <Button type="primary" className="w-52 h-10 my-4 bg-blue-500 text-white rounded-3xl text-lg font-semibold border-0" onClick={() => setIsModalVisible(false)}>หา Hospitel เลย !</Button>
+                        <Button
+                            type="primary"
+                            className="w-52 h-10 my-4 bg-blue-500 text-white rounded-3xl text-lg font-semibold border-0"
+                            onClick={() => setIsModalVisible(false)}
+                            css={css`
+                                background-color: #682CDA;
+                            `}
+                        >
+                            หา Hospitel เลย !
+                        </Button>
                         <div className="text-xs cursor-pointer flex"  onClick={() => setStep(LoginStep.LOG_IN)}>ล็อคอินสำหรับ Hospitel<NextStepIcon className="mt-1 ml-2" /></div>
                     </div>
                     
@@ -51,7 +60,7 @@ export const LoginModal = () => {
                 >
                     <PrevStepIcon onClick={() => setStep(LoginStep.FIRST)} className="cursor-pointer" />
                     <div
-                        className="m-2"
+                        className="m-4"
                     >
                         <div className="flex flex-col">
                             <div className="text-xs text-gray-500 mt-2">ยินดีต้อนรับ!</div>
@@ -76,10 +85,13 @@ export const LoginModal = () => {
                             <Button
                                 htmlType="submit"
                                 type="primary"
-                                className="w-full h-10 my-2 bg-blue-500 text-white rounded-3xl text-lg font-semibold border-0"
+                                className="w-full h-10 my-3 text-white rounded-3xl text-lg font-semibold border-0"
+                                css={css`
+                                    background-color: #682CDA;
+                                `}
                                 // onClick={() => setIsModalVisible(false)}
                             >
-                                หา Hospitel เลย !
+                                เข้าสู่ระบบ
                             </Button>
                             <div className="text-xs flex" onClick={() => setStep(LoginStep.LOG_IN)}>
                                 <div className="text-gray-400">ไม่มีสมาชิกผู้ใช้</div>
@@ -99,7 +111,7 @@ export const LoginModal = () => {
                     centered
                 >
                     <div className="flex flex-col items-center justify-center">
-                        <Button type="primary" className="w-52 h-10 my-4 bg-blue-500 text-white rounded-3xl text-lg font-semibold border-0" onClick={() => setIsModalVisible(false)}>หา Hospitel เลย !</Button>
+                        <Button type="default" className="w-52 h-10 my-4 bg-blue-500 text-white rounded-3xl text-lg font-semibold border-0" onClick={() => setIsModalVisible(false)}>หา Hospitel เลย !</Button>
                         <div className="text-xs cursor-pointer flex" onClick={() => setStep(LoginStep.LOG_IN)}>ล็อคอินสำหรับ Hospitel<NextStepIcon className="mt-1 ml-2" /></div>
                     </div>
                     
