@@ -1,11 +1,19 @@
 import { Hospitel } from './schema'
 
 export async function getHostpitels() {
-  const hospitels = await Hospitel.find()
-  return hospitels
+  try {
+    const hospitels = await Hospitel.find()
+    return hospitels
+  } catch (err) {
+    throw err
+  }
 }
 
 export async function getHostpitelbyID(id: string) {
-  const hospitel = await Hospitel.findById(id)
-  return hospitel
+  try {
+    const hospitel = await Hospitel.findById(id)
+    return hospitel
+  } catch (err) {
+    throw err
+  }
 }

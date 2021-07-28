@@ -24,35 +24,71 @@ const hospitelSchema = new Schema(
       type: Number,
       required: true,
     },
-    maxPrice: {
-      type: Number,
-      required: true,
-    },
-    minPrice: {
-      type: Number,
-      required: true,
+    price: {
+      maxPrice: {
+        type: Number,
+        required: true,
+      },
+      minPrice: {
+        type: Number,
+        required: true,
+      },
+      perDays: {
+        type: Number,
+        required: true,
+      },
     },
     imageUrl: {
-      type: String,
+      type: [String],
     },
-    province: {
+    documentUrl: {
       type: String,
-      required: true,
-    },
-    district: {
-      type: String,
-      required: true,
     },
     address: {
+      province: {
+        type: String,
+        required: true,
+      },
+      district: {
+        type: String,
+        required: true,
+      },
+      address: {
+        type: String,
+      },
+      latitude: {
+        type: Number,
+        required: true,
+      },
+      longitude: {
+        type: Number,
+        required: true,
+      },
+    },
+    contact: {
+      phone: {
+        type: [String],
+      },
+      social: {
+        type: [String],
+      },
+    },
+    facility: {
       type: String,
     },
-    latitude: {
-      type: Number,
-      required: true,
+    note: {
+      type: String,
     },
-    longitude: {
-      type: Number,
-      required: true,
+    coHospital: {
+      name: {
+        type: String,
+      },
+      latitude: {
+        type: Number,
+      },
+      longitude: {
+        type: Number,
+      },
     },
   },
   { timestamps: true },
@@ -64,14 +100,31 @@ export type HospitelDocument = mongoose.Document & {
   name: string
   totalRooms: number
   availableRooms: number
-  maxPrice: number
-  minPrice: number
+  price: {
+    maxPrice: number
+    minPrice: number
+    perDays: number
+  }
   imageUrl?: string
-  province: string
-  district: string
-  address?: string
-  latitude: number
-  longitude: number
+  documentUrl?: string
+  address: {
+    province: string
+    district: string
+    address?: string
+    latitude: number
+    longitude: number
+  }
+  contact: {
+    phone: string[]
+    social: string[]
+  }
+  facility: string
+  note: string
+  coHospital: {
+    name: string
+    latitude: number
+    longitude: number
+  }
   createdAt: Date
   updatedAt: Date
 }
