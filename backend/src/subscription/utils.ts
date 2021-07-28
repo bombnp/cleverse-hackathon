@@ -1,17 +1,27 @@
 import { Hospitel } from 'src/hospitel/schema'
 import { Subscription } from './schema'
+import { sendEmail } from './sendemail'
 
-// TODO: add logic
 export async function nearestAlert() {
   const subsription = await Subscription.find()
-  const hospital = await Hospitel.find()
-  for (const h of hospital) {
-    for (const s of subsription) {
+  const hospitel = await Hospitel.find({ availableRooms: { $gte: 0 } })
+  for (let h of hospitel) {
+    let reciever: string[] = []
+    for (let s of subsription) {
       if (
-        distance(h.latitude, h.longitude, s.latitude, s.longitude, 'K') < 10
+        distance(
+          h.address.latitude,
+          h.address.longitude,
+          s.latitude,
+          s.longitude,
+          'K',
+        ) <= 10
       ) {
-        console.log(s)
+        reciever.push(s.userEmail)
       }
+    }
+    if (reciever != []) {
+      await sendEmail(reciever, h)
     }
   }
   return subsription
@@ -43,6 +53,5 @@ export function distance(
   if (unit == 'N') {
     dist = dist * 0.8684
   }
-  console.log(dist)
   return dist
 }
