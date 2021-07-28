@@ -22,6 +22,20 @@ router.post(
 
 // TODO: add content type validation
 router.post(
+  '/images',
+  upload.array('file'),
+  async (req: Request, res: Response) => {
+    const promises = []
+    for (const file of req.files as Express.Multer.File[]) {
+      promises.push(uploadFile(`images/${uuidv4()}.jpg`, file))
+    }
+    const urls = await Promise.all(promises)
+    res.json({ urls })
+  },
+)
+
+// TODO: add content type validation
+router.post(
   '/document',
   upload.single('file'),
   async (req: Request, res: Response) => {
