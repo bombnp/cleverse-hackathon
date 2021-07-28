@@ -4,7 +4,9 @@ import { GoogleMapContent } from '../components/map/GoogleMapContent';
 import { LoginModal } from '../components/LoginModal';
 import { HospitelInfo } from 'components/HospitelInfo';
 import { RegisterModal } from 'components/RegisterModal';
-import { UploadHospitelPic } from 'components/UploadHospitelPic';
+import { UploadHospitelDocument } from 'components/UploadHospitelDocument';
+import { UploadHospitelImage } from 'components/UploadHospitelImage';
+import { HospitelLocation } from 'components/map/HospitelLocation';
 
 export const MapPage = () => {
     const [visible, setVisible] = useState(false);
@@ -16,8 +18,9 @@ export const MapPage = () => {
             <GoogleMapDrawer visible={visible} setVisible={setVisible} distance={distance} duration={duration}/>
             <LoginModal /> */}
             {/* <HospitelInfo /> */}
-            {/* <RegisterModal /> */}
-            <UploadHospitelPic />
+            {/* <UploadHospitelImage /> */}
+            <RegisterModal />
+            {/* <HospitelLocation /> */}
         </div>
     )
 }

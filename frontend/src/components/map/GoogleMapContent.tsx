@@ -115,10 +115,10 @@ export const GoogleMapContent = observer(({
           <Marker position={myLocation as google.maps.LatLng} />
           {hospitels.map((hospitel: HospitelDocument) => (
             <Marker
-              position={new google.maps.LatLng(hospitel.latitude, hospitel.longitude)}
+              position={new google.maps.LatLng(hospitel.address.latitude, hospitel.address.longitude)}
               onClick={() => {
                 setVisible(true)
-                setSelectedLocation(new google.maps.LatLng(hospitel.latitude, hospitel.longitude));
+                setSelectedLocation(new google.maps.LatLng(hospitel.address.latitude, hospitel.address.longitude));
                 console.log(selectedLocation, hospitel)
                 setSelectedHospitel(hospitel);
               }}

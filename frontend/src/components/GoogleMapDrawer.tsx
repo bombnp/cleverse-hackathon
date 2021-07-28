@@ -90,7 +90,7 @@ export const GoogleMapDrawer = observer(({ visible, setVisible, distance, durati
                             <div>02 222 2222</div>
                         </div>
                         <div className="my-2">
-                            <div>{numberWithCommas(selectedHospitel?.minPrice ?? 0)} - {numberWithCommas(selectedHospitel?.maxPrice ?? 0)} บาท/เดือน</div>
+                            <div>{numberWithCommas(selectedHospitel?.price.minPrice ?? 0)} - {numberWithCommas(selectedHospitel?.price.maxPrice ?? 0)} บาท/เดือน</div>
                         </div>
                         <div className="my-2">
                             {selectedHospitel?.address}

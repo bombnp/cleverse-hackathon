@@ -1,28 +1,31 @@
 import { HospitelDocument } from 'components/hospitel';
 import { action, makeObservable, observable } from 'mobx';
 
-export enum LevelResetFilterData {
-    SCHOOL_YEAR = 'school-year',
-    GRADE_LEVEL = 'grade-level',
-    CLASSROOM = 'classroom'
-}
-
 class HospitelStore {
     selectedHospitel?: HospitelDocument = undefined;
+    registerHospitel?: HospitelDocument = undefined;
     loginHospitel?: HospitelDocument = undefined;
+    userLogin: boolean = false;
+
 
     constructor() {
         makeObservable(this, {
             selectedHospitel: observable,
             loginHospitel: observable,
+            registerHospitel: observable,
+            userLogin: observable,
             setLoginHospitel: action,
-            setSelectedHospitel: action
+            setSelectedHospitel: action,
+            setRegisterHospitel: action,
+            setUserLogin: action
         });
     }
 
     resetFilterData = () => {
         this.selectedHospitel = undefined;
         this.loginHospitel = undefined;
+        this.registerHospitel = undefined;
+        this.userLogin = false;
     };
 
     setSelectedHospitel = (hospitel: HospitelDocument) => {
@@ -31,6 +34,14 @@ class HospitelStore {
 
     setLoginHospitel = (hospitel: HospitelDocument) => {
         this.loginHospitel = hospitel;
+    }
+
+    setRegisterHospitel = (hospitel: HospitelDocument) => {
+        this.registerHospitel = hospitel;
+    }
+
+    setUserLogin = (login: boolean) => {
+        this.userLogin = login;
     }
 }
 
