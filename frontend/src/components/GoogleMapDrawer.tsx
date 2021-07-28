@@ -5,7 +5,8 @@ import React from 'react';
 import { Drawer } from 'antd';
 import logo from './Hospitel_Pic.jpg';
 import { Global, css, jsx } from '@emotion/react';
-import classNames from 'classnames';
+import { observer } from 'mobx-react-lite';
+import { hospitelStore } from 'store/hospitelStore';
 interface GoogleMapDrawerProps {
     visible: boolean;
     setVisible: (visible: boolean) => void;
@@ -13,30 +14,31 @@ interface GoogleMapDrawerProps {
     duration?: string;
 }
 
-export const GoogleMapDrawer = ({ visible, setVisible, distance, duration }: GoogleMapDrawerProps) => {
-    let bedRest = 50;
+export const GoogleMapDrawer = observer(({ visible, setVisible, distance, duration }: GoogleMapDrawerProps) => {
     const onClose = () => {
         setVisible(false);
     };
 
-    const calculateRoom = (value:number) => {
+    const { selectedHospitel } = hospitelStore;
+
+    const calculateRoom = (value: number) => {
         var percentage = (value / 100) * 100;
         if (percentage === 0) {
-        return `#BFBFBF`;
+            return `#BFBFBF`;
         } else if (percentage <= 30) {
-        return `#F0CC12`;
+            return `#F0CC12`;
         } else {
-        return `#11B418`;
+            return `#11B418`;
         }
     }
 
-    const numberWithCommas = (x:number) => {
+    const numberWithCommas = (x: number) => {
         return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     }
     return (
         <div>
-        <Global
-            styles={css`
+            <Global
+                styles={css`
             .ant-drawer-left, .ant-drawer-right {
                 height: 600px;
             }
@@ -61,36 +63,37 @@ export const GoogleMapDrawer = ({ visible, setVisible, distance, duration }: Goo
                 border-bottom-right-radius: 25px;
             }
         `}
-      />
-        <Drawer
-            width={480}
-            placement="left"
-            closable
+            />
+            <Drawer
+                width={480}
+                placement="left"
+                closable
                 maskClosable={false}
                 mask={false}
-            onClose={onClose}
-            visible={visible}
-        >
-            <div className="flex flex-col mx-4 mt-8">
-                <img className="w-full h-56 rounded-2xl" src={logo} alt="hospitel logo" />
-                <div className="mt-6">
-                    <div className="text-3xl">Almas Hotel Bangkok</div>
+                onClose={onClose}
+                visible={visible}
+            >
+                {console.log(selectedHospitel)}
+                <div className="flex flex-col mx-4 mt-8">
+                    <img className="w-full h-56 rounded-2xl" src={logo} alt="hospitel logo" />
+                    <div className="mt-6">
+                        <div className="text-3xl">{selectedHospitel?.name}</div>
                         <div
                             className="text-4xl font-bold my-3"
                             css={css`
-                                color: ${calculateRoom(50)};
+                                color: ${calculateRoom(selectedHospitel?.availableRooms ?? 0)};
                         `}>
-                            {bedRest} เตียง
+                            {selectedHospitel?.availableRooms} เตียง
                         </div>
-                    <div className="my-3 text-lg font-semibold underline leading-5">
-                        <div>02 111 1111</div>
-                        <div>02 222 2222</div>
-                    </div>
-                    <div className="my-2">
-                            <div>{numberWithCommas(1500)} - {numberWithCommas(3000)} บาท/เดือน</div>
-                    </div>
-                    <div className="my-2">
-                        ที่อยู่
+                        <div className="my-3 text-lg font-semibold underline leading-5">
+                            <div>02 111 1111</div>
+                            <div>02 222 2222</div>
+                        </div>
+                        <div className="my-2">
+                            <div>{numberWithCommas(selectedHospitel?.minPrice ?? 0)} - {numberWithCommas(selectedHospitel?.maxPrice ?? 0)} บาท/เดือน</div>
+                        </div>
+                        <div className="my-2">
+                            {selectedHospitel?.address}
                         </div>
                         <div>** ห่างจากคุณ {distance} **</div>
                     </div>
@@ -100,10 +103,10 @@ export const GoogleMapDrawer = ({ visible, setVisible, distance, duration }: Goo
                             color: #808080
                         `}
                     >
-                        อัพเดทล่าสุด
+                        อัพเดทล่าสุด {selectedHospitel?.updatedAt}
                     </div>
-            </div>
+                </div>
             </Drawer>
         </div>
     )
-}
+});

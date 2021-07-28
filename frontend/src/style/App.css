@@ -162,7 +162,6 @@ path {
   display: flex;
   align-items: center;
   background: transparent !important;
-  min-width: 180px;
   border-radius: 0.75rem !important;
 }
 .ant-select-selection-search {

@@ -2,15 +2,19 @@
 /** @jsx jsx */
 
 import { Global, css, jsx } from '@emotion/react';
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import ReactDOM from 'react-dom';
 import { ReactComponent as SearchIcon } from '../../assets/search-icon.svg';
+import { useHospitels } from '../../hooks/useHospitels';
 import { GoogleMapHospitelFilterBox } from '../GoogleMapHospitelFilterBox';
 import { useLoadScript, GoogleMap, StandaloneSearchBox, Marker, DistanceMatrixService } from '@react-google-maps/api';
 import { Spin, Input } from 'antd';
+import { observer } from 'mobx-react-lite';
+import { hospitelStore } from 'store/hospitelStore';
 import {
   NotificationModal
 } from '../NotificationModal';
+import { HospitelDocument } from 'components/hospitel';
 declare const google: any;
 
 export type SearchBoxType= {
@@ -23,7 +27,7 @@ interface GooogleMapContentProps {
   setDistance: (distance: string) => void;
   setDuration: (duration: string) => void;
 }
-export const GoogleMapContent = ({
+export const GoogleMapContent = observer(({
   setVisible,
   setDistance,
   setDuration
@@ -33,6 +37,17 @@ export const GoogleMapContent = ({
   const [ center, setCenter ] = useState<google.maps.LatLng>();
   const [ selectedLocation, setSelectedLocation ] = useState<google.maps.LatLng>()
   const [map, setMap] = useState(null);
+
+  const { setSelectedHospitel } = hospitelStore;
+
+  const {
+    data: hospitels,
+    // execute: getHospitels
+  } = useHospitels();
+
+  // useEffect(() => {
+  //   getHospitels();
+  // }, []);
 
   const calculateRoom = (value:number) => {
     var percentage = (value / 100) * 100;
@@ -48,6 +63,7 @@ export const GoogleMapContent = ({
   const onPlacesChanged = () => {
     const newLocation = searchBox.getPlaces();
     if (newLocation[0] !== undefined) {
+      console.log('new',newLocation[0].geometry.location);
       setCenter(newLocation[0].geometry.location);
     }
   }
@@ -96,29 +112,35 @@ export const GoogleMapContent = ({
         zoom={19}
         onClick={(e) => console.log(e.latLng.lat(), e.latLng.lng())}
       >
-        <Marker position={myLocation as google.maps.LatLng} />
-        <Marker
-          position={center as google.maps.LatLng}
-          onClick={() => {
-            setVisible(true)
-            setSelectedLocation(myLocation);
-          }}
-          onLoad={marker => {
-                const customIcon = (opts:any) => Object.assign({
-                  path: 'M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z',
-                  fillColor: '#34495e',
-                  fillOpacity: 1,
-                  strokeColor: '#000',
-                  strokeWeight: 1,
-                  scale: 1.5,
-                }, opts);
-              
-            marker.setIcon(customIcon({
-              fillColor: `${calculateRoom(22)}` ,
-              strokeColor: '#000000'
-            }));
-          }}
-        />
+          <Marker position={myLocation as google.maps.LatLng} />
+          {hospitels.map((hospitel: HospitelDocument) => (
+            <Marker
+              position={new google.maps.LatLng(hospitel.latitude, hospitel.longitude)}
+              onClick={() => {
+                setVisible(true)
+                setSelectedLocation(new google.maps.LatLng(hospitel.latitude, hospitel.longitude));
+                console.log(selectedLocation, hospitel)
+                setSelectedHospitel(hospitel);
+              }}
+              onLoad={marker => {
+                    const customIcon = (opts:any) => Object.assign({
+                      path: 'M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z',
+                      fillColor: '#34495e',
+                      fillOpacity: 1,
+                      strokeColor: '#000',
+                      strokeWeight: 1,
+                      scale: 1.5,
+                    }, opts);
+                  
+                marker.setIcon(customIcon({
+                  fillColor: `${calculateRoom(hospitel.availableRooms)}` ,
+                  strokeColor: '#000000'
+                }));
+              }}
+            /> 
+            
+          ))}
+
           <StandaloneSearchBox
             onPlacesChanged={onPlacesChanged}
             onLoad={onSBLoad}
@@ -159,4 +181,4 @@ export const GoogleMapContent = ({
         />
       </GoogleMap></div> : <div><Spin /></div>
     )
-};
+});
