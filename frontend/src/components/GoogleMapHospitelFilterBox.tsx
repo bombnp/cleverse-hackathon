@@ -70,7 +70,7 @@ export const GoogleMapHospitelFilterBox = () => {
     const [slide, setSlide] = useState<any>([calPercen(500), calPercen(40000)]);
 
     return (
-      <div className=" ">
+      <div>
         <div>
           <div className="grid grid-cols-12 gap-4">
             <div className="col-span-1 overflow-hidden ">ราคา</div>
@@ -272,7 +272,7 @@ export const GoogleMapHospitelFilterBox = () => {
   };
 
   return (
-    <div className="m-0 w-full h-8 -mt-28 -mr-2">
+    <div className="m-0 w-full h-8 -mt-12 -mr-2">
       <Global
         styles={css`
           .ant-radio-button-wrapper:not(:first-child)::before {

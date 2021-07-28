@@ -63,7 +63,6 @@ export const GoogleMapContent = observer(({
   const onPlacesChanged = () => {
     const newLocation = searchBox.getPlaces();
     if (newLocation[0] !== undefined) {
-      console.log('new',newLocation[0].geometry.location);
       setCenter(newLocation[0].geometry.location);
     }
   }
@@ -109,6 +108,12 @@ export const GoogleMapContent = observer(({
         mapContainerStyle={{ height: '100vh', width: '100vw' }}
         onLoad={(map) => onLoad(map)}
         center={center ? center : myLocation}
+        options={{
+            mapTypeControl: false,
+            fullscreenControl: false,
+            zoomControl: false,
+            streetViewControl: false
+        }}
         zoom={19}
         onClick={(e) => console.log(e.latLng.lat(), e.latLng.lng())}
       >
