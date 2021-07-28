@@ -1,7 +1,7 @@
 import express from 'express'
 import passport from 'passport'
 import { getHostpitelbyID, getHostpitels } from 'src/hospitel/get'
-import { createHospitel, updateAvailableRoom } from 'src/hospitel/set'
+import { updateAvailableRoom } from 'src/hospitel/set'
 
 const router = express.Router()
 router.use(express.json())
@@ -24,12 +24,6 @@ router.get('/:_id', async (req, res) => {
   } catch (err) {
     res.status(500).send(err)
   }
-})
-
-//TODO: delete me
-router.post('/', async (req, res) => {
-  const resp = await createHospitel(req)
-  res.status(200).json(resp)
 })
 
 router.post('/availablerooms', async (req, res) => {
