@@ -4,7 +4,6 @@ export async function setSubscription(req: any) {
     userEmail: req.body.userEmail,
     latitude: req.body.latitude,
     longitude: req.body.longitude,
-    createdAt: Date.now(),
   })
 
   const res = await subscription.save()
