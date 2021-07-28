@@ -1,5 +1,4 @@
 import useAxios from 'axios-hooks';
-import { MOCK_HOSPITELS_DATA } from 'components/const';
 export const useHospitels = () => {
     // const [
     //     { data: response, loading, error },
@@ -13,7 +12,7 @@ export const useHospitels = () => {
     // };
 
     return {
-        data: MOCK_HOSPITELS_DATA|| [],
+        data: [],
         loading: false,
         // error,
         // execute: undefined

@@ -14,12 +14,12 @@ export const MapPage = () => {
     const [duration, setDuration] = useState<string>('');
     return (
         <div>
-            {/* <GoogleMapContent setVisible={setVisible} setDistance={setDistance} setDuration={setDuration}/>
+            <GoogleMapContent setVisible={setVisible} setDistance={setDistance} setDuration={setDuration}/>
             <GoogleMapDrawer visible={visible} setVisible={setVisible} distance={distance} duration={duration}/>
-            <LoginModal /> */}
+            <LoginModal />
             {/* <HospitelInfo /> */}
             {/* <UploadHospitelImage /> */}
-            <RegisterModal />
+            {/* <RegisterModal /> */}
             {/* <HospitelLocation /> */}
         </div>
     )
