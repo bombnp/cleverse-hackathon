@@ -1,4 +1,4 @@
-import express, { NextFunction, Request, Response } from 'express'
+import express, { Request, Response } from 'express'
 import passport from 'passport'
 import { login, LoginDTO } from 'src/auth/login'
 import { register, RegisterDTO } from 'src/auth/register'
@@ -16,23 +16,15 @@ router.post('/login', async (req: Request<{}, {}, LoginDTO>, res: Response) => {
     })
   }
   const token = await login({ email: body.email, password: body.password })
-  res.status(201).json({ token })
+  res.json({ token })
 })
 
 router.post(
   '/register',
-  async (
-    req: Request<{}, {}, RegisterDTO>,
-    res: Response,
-    next: NextFunction,
-  ) => {
+  async (req: Request<{}, {}, RegisterDTO>, res: Response) => {
     const body = req.body
-    try {
-      const hospitel = await register(body)
-      res.status(201).json(hospitel)
-    } catch (err) {
-      next(err)
-    }
+    const hospitel = await register(body)
+    res.json(hospitel)
   },
 )
 
@@ -40,7 +32,7 @@ router.post(
 router.use(passport.authenticate('jwt', { session: false }))
 
 router.get('/me', async (req: RequestWithUser, res: Response) => {
-  res.status(200).json(req.user)
+  res.json(req.user)
 })
 
 export default router

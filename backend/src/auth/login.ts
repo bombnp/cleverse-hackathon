@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt'
+import { HttpError } from 'src/errors'
 import { Hospitel } from 'src/hospitel/schema'
 import { signJWT } from './jwt'
 
@@ -12,11 +13,11 @@ export async function login({ email, password }: LoginDTO): Promise<string> {
     userEmail: email,
   }).select('userPassword')
   if (!hospitel) {
-    throw { status: 404, message: "can't find email" }
+    throw new HttpError(404, "can't find email")
   }
 
   if (!bcrypt.compareSync(password, hospitel.userPassword)) {
-    throw { status: 400, message: 'invalid password' }
+    throw new HttpError(400, 'invalid password')
   }
 
   return signJWT({ userId: hospitel._id })
