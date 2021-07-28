@@ -16,11 +16,16 @@ export const GoogleMapHospitelFilterBox = () => {
     { label: "ใกล้เต็ม", value: "AlmostFull", color: "#F0CC12" },
     { label: "เต็มแล้ว", value: "Full", color: "#BFBFBF" },
   ];
+  const pricePer = [
+    { id: 1, label: "ต่อคืน", value: "perDay" },
+    { id: 2, label: "ต่อ 14วัน", value: "perHalfMonth" },
+    { id: 3, label: "ต่อเดือน", value: "perMonth" },
+  ];
   const [province, setProvince] = useState([]);
   const [district, setDistrict] = useState([]);
   const [radio, setRadio] = useState("");
 
-  const fetchAPI = (api : any, setAPI: (result : any) => void) => {
+  const fetchAPI = (api: any, setAPI: (result: any) => void) => {
     fetch(api)
       .then((response) => response.json())
       .then((result) => {
@@ -33,41 +38,43 @@ export const GoogleMapHospitelFilterBox = () => {
     fetchAPI(district_api, setDistrict);
   }, []);
 
-    const SliderByNum = () => {
-        const [min, setMin] = useState<number>(500);
-        const [max, setMax] = useState<number>(40000);
-        const BoundMax = 65000;
-        const calPercen = (num: number) => {
-            return (num / BoundMax) * 100;
-        };
-        const calToReal = (num: number) => {
-            return (num / 100) * BoundMax;
-        };
-        const onEnterMin = (e: any) => {
-            e.preventDefault();
-            setMin(e.target.value);
-            if (min < max) setSlide([calPercen(min), slide[1]]);
-        };
-        const onEnterMax = (e: any) => {
-            e.preventDefault();
-            setMax(e.target.value);
-            if (max > min) setSlide([slide[0], calPercen(max)]);
-        };
-        function onChange(value: number[]) {
-            setSlide(value);
-            setMin(calToReal(slide[0]));
-            setMax(calToReal(slide[1]));
-        }
-        const [slide, setSlide] = useState<any>([calPercen(500), calPercen(40000)]);
+  const SliderByNum = () => {
+    const [min, setMin] = useState<number>(500);
+    const [max, setMax] = useState<number>(40000);
+    const [priceP, setPriceP] = useState("");
+    const BoundMax = 65000;
+    const calPercen = (num: number) => {
+      return (num / BoundMax) * 100;
+    };
+    const calToReal = (num: number) => {
+      return (num / 100) * BoundMax;
+    };
+    const onEnterMin = (e: any) => {
+      e.preventDefault();
+      setMin(e.target.value);
+      if (min < max) setSlide([calPercen(min), slide[1]]);
+    };
+    const onEnterMax = (e: any) => {
+      e.preventDefault();
+      setMax(e.target.value);
+      if (max > min) setSlide([slide[0], calPercen(max)]);
+    };
+    function onChange(value: number[]) {
+      setSlide(value);
+      setMin(calToReal(slide[0]));
+      setMax(calToReal(slide[1]));
+    }
+    const handleChangePricePer = (value: any) => {
+      setPriceP(value);
+    };
+    const [slide, setSlide] = useState<any>([calPercen(500), calPercen(40000)]);
 
     return (
-      <div>
+      <div className=" ">
         <div>
-          <div className="flex">
-            <div className="mr-2">ราคา</div>
-            <div
-              className="input-wrapper w-full flex justify-between "
-            >
+          <div className="grid grid-cols-12 gap-4">
+            <div className="col-span-1 overflow-hidden ">ราคา</div>
+            <div className="input-wrapper col-span-9 flex justify-between ">
               <Input
                 value={min}
                 onChange={(e) => setMin(parseInt(e.target.value))}
@@ -97,15 +104,45 @@ export const GoogleMapHospitelFilterBox = () => {
                 }}
               />
             </div>
+            <div className="col-span-2">
+              <Select
+                placeholder={"ต่อคืน"}
+                onChange={handleChangePricePer}
+                style={{
+                  marginRight: "0.5rem",
+                  borderRadius: "16px",
+                  border: "1px solid #EDEDED",
+                  overflow: "hidden",
+                  padding: "1px 2px",
+                  width: "70px",
+                  height: "30px",
+                  // fontSize: "0.5rem",
+                  backgroundColor: "whitesmoke",
+                }}
+              >
+                {pricePer.map((item: any) => (
+                  <Option
+                    key={"price" + item.id}
+                    value={item.value}
+                    // style={{ fontSize: "0.5rem" }}
+                  >
+                    {item.label}
+                  </Option>
+                ))}
+              </Select>
+            </div>
           </div>
         </div>
-        <div className="ml-10">
-          <Slider
-            range
-            value={slide}
-            tooltipVisible={false}
-            onChange={onChange}
-          />
+        <div className="grid grid-cols-12">
+          <div className="col-span-1"></div>
+          <div className="col-span-9">
+            <Slider
+              range
+              value={slide}
+              tooltipVisible={false}
+              onChange={onChange}
+            />
+          </div>
         </div>
       </div>
     );
@@ -114,10 +151,10 @@ export const GoogleMapHospitelFilterBox = () => {
   const LocationDropdown = () => {
     const [selectProvince, setSelectProvince] = useState(null);
     const [selectDistrict, setSelectDistrict] = useState(null);
-    const handleChangeProvince = (value:any) => {
+    const handleChangeProvince = (value: any) => {
       setSelectProvince(value);
     };
-    const handleChangeDistrict = (value:any) => {
+    const handleChangeDistrict = (value: any) => {
       setSelectDistrict(value);
     };
     return (
@@ -135,8 +172,8 @@ export const GoogleMapHospitelFilterBox = () => {
             backgroundColor: "whitesmoke",
           }}
         >
-          {province.map((item : any) => (
-              <Option key={"pv" + item.id} value={item.id}>
+          {province.map((item: any) => (
+            <Option key={"pv" + item.id} value={item.id}>
               {item.name_th}
             </Option>
           ))}
@@ -154,8 +191,8 @@ export const GoogleMapHospitelFilterBox = () => {
           }}
         >
           {district
-            ?.filter((item : any) => item.province_id === selectProvince)
-            ?.map((item : any) => (
+            ?.filter((item: any) => item.province_id === selectProvince)
+            ?.map((item: any) => (
               <Option key={"amp" + item.id} value={item.id}>
                 {item.name_th}
               </Option>
@@ -166,7 +203,7 @@ export const GoogleMapHospitelFilterBox = () => {
   };
 
   const filterInside = () => {
-    const onRadioChange = (e : any) => {
+    const onRadioChange = (e: any) => {
       e.preventDefault();
       setRadio(e.target.value);
     };
