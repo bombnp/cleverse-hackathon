@@ -8,16 +8,25 @@ router.use(express.json())
 router.use(express.urlencoded({ extended: true }))
 
 router.get('/', async (req, res) => {
-  const resp = await getHostpitels()
-  res.status(200).send(resp)
+  try {
+    const resp = await getHostpitels()
+    res.status(200).send(resp)
+  } catch (err) {
+    res.status(500).send(err)
+  }
 })
 
 router.get('/:_id', async (req, res) => {
   const id = req.params['_id']
-  const resp = await getHostpitelbyID(id)
-  res.status(200).send(resp)
+  try {
+    const resp = await getHostpitelbyID(id)
+    res.status(200).send(resp)
+  } catch (err) {
+    res.status(500).send(err)
+  }
 })
 
+//TODO: delete me
 router.post('/', async (req, res) => {
   const resp = await createHospitel(req)
   res.status(200).json(resp)
