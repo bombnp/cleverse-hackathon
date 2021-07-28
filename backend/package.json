@@ -9,6 +9,7 @@
     "format": "yarn prettier && yarn lint:fix"
   },
   "dependencies": {
+    "@google-cloud/storage": "^5.11.0",
     "@types/bcrypt": "^5.0.0",
     "@types/dotenv": "^8.2.0",
     "@types/mongoose": "^5.11.97",
@@ -18,16 +19,20 @@
     "express": "5.0.0-alpha.8",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.13.3",
+    "multer": "^1.4.2",
     "nodemon": "^2.0.12",
     "package.json": "^2.0.1",
     "passport": "^0.4.1",
-    "passport-jwt": "^4.0.0"
+    "passport-jwt": "^4.0.0",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@types/jsonwebtoken": "^8.5.4",
+    "@types/multer": "^1.4.7",
     "@types/node": "^16.4.2",
     "@types/passport": "^1.0.7",
     "@types/passport-jwt": "^3.0.6",
+    "@types/uuid": "^8.3.1",
     "@typescript-eslint/eslint-plugin": "^4.28.4",
     "@typescript-eslint/parser": "^4.28.4",
     "eslint": "^7.31.0",
