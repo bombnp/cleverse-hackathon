@@ -35,7 +35,7 @@ export async function sendEmail(
           hospitel.name +
           '<br>เบอร์ติดต่อ: ' +
           phoneNumber +
-          '<br>ดูข้อมูลเพิ่มเติมได้ที่:  </p>' +
+          '<br>ดูข้อมูลเพิ่มเติมได้ที่: www.bedhub.com </p>' +
           '<p>ถ้าหากมี Hospitel ใกล้เคียงที่มีห้องว่างเพิ่มขึ้น ทางทีมงานของเราจะแจ้งให้คุณทราบในทันที</p>' +
           '<p>ทีมงาน BedHub</p>',
         include_email_tokens: recipient,
