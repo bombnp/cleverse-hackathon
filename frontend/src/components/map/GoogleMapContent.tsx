@@ -15,6 +15,7 @@ import {
   NotificationModal
 } from '../NotificationModal';
 import { HospitelDocument } from 'components/hospitel';
+import { UserStep } from '../UserStep';
 declare const google: any;
 
 export type SearchBoxType= {
@@ -75,11 +76,15 @@ export const GoogleMapContent = observer(({
     setMap(ref);
     const notificationDiv = document.createElement('div');
     const controlButtonDiv = document.createElement('div');
+    const loginButtonDiv = document.createElement('div');
 
     ReactDOM.render(<NotificationModal />, notificationDiv);
     ReactDOM.render(<GoogleMapHospitelFilterBox />, controlButtonDiv);
+    ReactDOM.render(<UserStep />, loginButtonDiv);
     ref.controls[google.maps.ControlPosition.TOP_RIGHT].push(notificationDiv);
     ref.controls[google.maps.ControlPosition.RIGHT_TOP].push(controlButtonDiv);
+    ref.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(loginButtonDiv);
+
     navigator.geolocation.getCurrentPosition(function (position) {
         let location = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
         setMyLocation(location);

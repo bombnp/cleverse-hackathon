@@ -9,7 +9,7 @@ export const RegisterFlow = () => {
         case RegisterStep.FIELD_DATA:
             return <RegisterModal setStep={setStep}/>
         case RegisterStep.CONFIRM:
-            return <RegisterConfirmModal />
+            return <RegisterConfirmModal setStep={setStep}/>
         default:
             return <RegisterModal setStep={setStep}/>
     }

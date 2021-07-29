@@ -23,3 +23,13 @@ export const EmailButton = ({ children, className, ...restProps }: any) => (
     {children}
   </button>
 );
+
+export const LoginButton = ({ children, className, ...restProps }: any) => (
+  <button
+    type="button"
+    className={`w-48 h-8 rounded-2xl text-xs outline-none z-10 my-2 mt-2 mr-16 shadow-lg bg-white -ml-32${className}`}
+    {...restProps}
+  >
+    {children}
+  </button>
+);
