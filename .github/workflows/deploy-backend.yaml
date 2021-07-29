@@ -65,7 +65,6 @@ jobs:
             git clone git@github.com:bombnp/cleverse-hackathon.git
 
             cp secrets/.env cleverse-hackathon/backend
-            cp secrets/credentials.json cleverse-hackathon/backend
 
             docker-compose -f cleverse-hackathon/backend/docker-compose.deploy-ci.yml up -d
 
