@@ -32,8 +32,8 @@ jobs:
 
       - name: Set project secrets
         run: |
-          echo "${{ secrets.ENV }}" >> .env
-          echo "${{ secrets.CREDENTIALS }}" >> credentials.json
+          echo "${{ secrets.ENV }}" >> ./backend/.env
+          echo "${{ secrets.CREDENTIALS }}" >> ./backend/credentials.json
 
       - name: Push to GitHub Packages
         uses: docker/build-push-action@v2
