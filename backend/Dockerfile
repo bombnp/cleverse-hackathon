@@ -1,9 +1,11 @@
 FROM node:14-alpine AS build
 
-COPY ["package.json", "yarn.lock", "./"]
-RUN yarn --frozen-lockfile
-
+WORKDIR /app
 ENV NODE_ENV production
+
+COPY ["package.json", "yarn.lock", "./"]
+
+RUN yarn --frozen-lockfile
 
 COPY . .
 

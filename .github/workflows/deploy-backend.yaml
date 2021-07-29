@@ -35,6 +35,11 @@ jobs:
           username: bombnp
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Set project secrets
+        run: |
+          echo ${{ secrets.ENV }} >> .env
+          echo ${{ secrets.CREDENTIALS }} >> credentials.json
+
       - name: Push to GitHub Packages
         uses: docker/build-push-action@v2
         with:
