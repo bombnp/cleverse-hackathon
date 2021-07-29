@@ -38,7 +38,7 @@ export const GoogleMapContent = observer(({
   const [ selectedLocation, setSelectedLocation ] = useState<google.maps.LatLng>()
   const [map, setMap] = useState(null);
 
-  const { setSelectedHospitel } = hospitelStore;
+  const { setSelectedHospitel, loading } = hospitelStore;
 
   const {
     data: hospitels,

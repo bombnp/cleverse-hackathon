@@ -3,6 +3,7 @@
 
 import { Global, css, jsx } from '@emotion/react';
 import React, { useState } from 'react'
+import ReactDOM from 'react-dom';
 import { useHospitels } from '../../hooks/useHospitels';
 import { useLoadScript, GoogleMap, StandaloneSearchBox, Marker } from '@react-google-maps/api';
 import { Spin } from 'antd';
@@ -16,12 +17,14 @@ export type SearchBoxType= {
     lng: number;
 }
 
-// interface HospitelLocationProps {
-//     setLocation: (location: any) => void;
-// }
+interface HospitalLocationProps {
+    selectedHospitalLocation?: any;
+    setSelectedHospitalLocation?: (location: any) => void;
+}
 
-export const HospitalLocation = observer(() => {
-  const [myLocation, setMyLocation] = useState<google.maps.LatLng>();
+export const HospitalLocation = observer(({selectedHospitalLocation, setSelectedHospitalLocation} : HospitalLocationProps) => {
+    const [myLocation, setMyLocation] = useState<google.maps.LatLng>();
+    const [selectedLocation, setSelectedLocation] = useState(false);
   const [searchBox, setSearchBox] = useState<any>(null);
   const [ center, setCenter ] = useState<google.maps.LatLng>();
   const [ map, setMap ] = useState(null);
@@ -36,7 +39,12 @@ export const HospitalLocation = observer(() => {
   // useEffect(() => {
   //   getHospitels();
   // }, []);
-
+    
+    const ConfirmButton = () => {
+        return (
+          <div className="w-10 h-6 cursor-pointer bg-white -mt-12" onClick={() => setSelectedLocation(true)}>ยืนยัน</div>
+      )
+    }
   const onPlacesChanged = () => {
     const newLocation = searchBox.getPlaces();
       if (newLocation[0] !== undefined) {
@@ -51,6 +59,10 @@ export const HospitalLocation = observer(() => {
 
   const onLoad = (ref: any) => {
     setMap(ref);
+    const controlButtonDiv = document.createElement('div');
+
+    ReactDOM.render(<ConfirmButton />, controlButtonDiv);
+    ref.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(controlButtonDiv);
     navigator.geolocation.getCurrentPosition(function (position) {
         let location = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
         setMyLocation(location);
@@ -76,20 +88,28 @@ export const HospitalLocation = observer(() => {
         `}
       />  
       <GoogleMap
-        mapContainerStyle={{ height: '240px', width: '277px' }}
-        onLoad={(map) => onLoad(map)}
-        center={center ? center : myLocation}
-        options={{
-            mapTypeControl: false,
-            fullscreenControl: false,
-            zoomControl: false,
-            streetViewControl: false
-        }}
-        zoom={19}
-        onClick={(e) => setMyLocation(new google.maps.LatLng(e.latLng.lat(), e.latLng.lng()))}
+                  mapContainerStyle={{ height: '240px', width: '277px' }}
+                  onLoad={(map) => onLoad(map)}
+                  center={selectedHospitalLocation ?? (center ? center : myLocation)}
+                  options={{
+                      mapTypeControl: false,
+                      fullscreenControl: false,
+                      zoomControl: false,
+                      streetViewControl: false
+                  }}
+                  zoom={19}
+                  onClick={(e) => {
+                      if (!selectedLocation && !selectedHospitalLocation) {
+                          setMyLocation(new google.maps.LatLng(e.latLng.lat(), e.latLng.lng()))
+                          if (setSelectedHospitalLocation) {
+                            setSelectedHospitalLocation({ lat: e.latLng.lat(), lng: e.latLng.lng()})
+                          }
+                      }
+                      
+                  }}
       >
-          <Marker position={myLocation as google.maps.LatLng} />
-          <StandaloneSearchBox
+          <Marker position={(selectedHospitalLocation ?? myLocation) as google.maps.LatLng} />
+          {!selectedHospitalLocation && <StandaloneSearchBox
             onPlacesChanged={onPlacesChanged}
             onLoad={onSBLoad}
           >
@@ -112,7 +132,7 @@ export const HospitalLocation = observer(() => {
                 padding: '0 5px'
               }}
               />
-          </StandaloneSearchBox>
+          </StandaloneSearchBox>}
       </GoogleMap></div> : <div><Spin /></div>
     )
 });

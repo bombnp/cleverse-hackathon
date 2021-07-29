@@ -3,7 +3,7 @@
 import React, { useState, useRef } from 'react';
 import { ReactComponent as UploadIcon } from 'assets/upload-icon.svg';
 
-import { Button } from 'antd';
+import { Button, message } from 'antd';
  
 export const UploadHospitelDocument = () => {
   const [selectedFile, setSelectedFile] = useState<any>();
@@ -16,14 +16,16 @@ export const UploadHospitelDocument = () => {
     const onFileUpload = () => {
       const formData = new FormData();
     
-        if (selectedFile !== undefined) {
+      if (selectedFile !== undefined && selectedFile.type === 'application/pdf') {
             formData.append(
                 "fileName",
                 selectedFile,
                 selectedFile?.name
             );            
-        }
-      console.log(selectedFile);
+      } else {
+        message.error('นามสกึลไฟล์ต้องเป็น .pdf เท่านั้น');
+        formData.delete('fileName');
+      }
       //TODO: add upload function
     };
     

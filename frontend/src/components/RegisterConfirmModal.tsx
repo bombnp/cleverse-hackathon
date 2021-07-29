@@ -1,13 +1,18 @@
 import React, { useState } from "react";
 import { Modal, Input, Button, Form, Select } from "antd";
+import { hospitelStore } from "store/hospitelStore";
+import { observer } from 'mobx-react-lite';
+import { HospitalLocation } from "./map/HospitalLocation";
+import { HospitelLocation } from "./map/HospitelLocation";
 
-export const RegisterConfirmModal = () => {
+export const RegisterConfirmModal = observer(() => {
   const [isModalVisible, setIsModalVisible] = useState(true);
   const [registerForm] = Form.useForm();
   //   first
   const [step, setStep] = useState("second");
   const { Option } = Select;
-  const { TextArea } = Input;
+    const { TextArea } = Input;
+    const { registerHospitel } = hospitelStore;
 
   const handleSubmitForm = () => {
     //TODO: add fetch data
@@ -243,7 +248,8 @@ export const RegisterConfirmModal = () => {
           footer={false}
           onCancel={() => setIsModalVisible(false)}
           centered
-        >
+          >
+              {console.log(registerHospitel)}
           <div className=" font-extrabold text-xl ">ยืนยันข้อมูล Hospitel</div>
 
           <div className="DISPLAY-WRAPPER">
@@ -251,7 +257,7 @@ export const RegisterConfirmModal = () => {
               <div>
                 <div className="mb-8">
                   <div className="mb-2 font-bold ">ชื่อ Hospitel</div>
-                  <div className="ml-4">{"โรงแรมไอบิสกรุงเทพ"}</div>
+                  <div className="ml-4">{registerHospitel?.name}</div>
                 </div>
                 {/*Jungwad */}
                 <div className="grid grid-cols-2 mb-8">
@@ -267,26 +273,24 @@ export const RegisterConfirmModal = () => {
                 <div className="mb-8">
                   <div className="mb-2 font-bold ">ที่อยู่</div>
                   <div className="ml-4">
-                    {
-                      "93 ถนนป๊อปปูล่า ตําบลบ้านใหม่ อําเภอปากเกร็ด นนทบุรี, สนามบินนานาชาติดอนเมือง, กรุงเทพ, ประเทศไทย, 11120"
-                    }
+                    {registerHospitel?.address.address}
                   </div>
                 </div>
                 <div className="mb-8">
                   <div className="mb-2 font-bold ">ราคา</div>
-                  <div className="ml-4 ">{`${"45,000"} -  ${"45,000"}   ต่อ ${"14"} วัน`}</div>
+                  <div className="ml-4 ">{`${registerHospitel?.price.minPrice} -  ${registerHospitel?.price.maxPrice}   ${registerHospitel?.price.perDays}`}</div>
                 </div>
                 <div className="mb-8">
                   <div className="mb-2  font-bold ">เบอร์ติดต่อ</div>
-                  <div className="ml-4 ">{`${"02-0117777"}`}</div>
-                  <div className="ml-4 ">{`${"02-0117777"}`}</div>
+                  <div className="ml-4 ">{registerHospitel?.contact.phone[0][0]}</div>
+                  <div className="ml-4 ">{registerHospitel?.contact.phone[0][1]}</div>
                 </div>
                 <div className="mb-8">
                   <div className="mb-2  font-bold ">
                     ช่องทางติดต่ออื่นๆ (Facebook, Line ฯลฯ)
                   </div>
-                  <div className="ml-4 ">{`${"https://www.ibisbangkokimpact.com/th/"}`}</div>
-                  <div className="ml-4 ">{`${"https://www.ibisbangkokimpact.com/th/"}`}</div>
+                  <div className="ml-4 ">{registerHospitel?.contact.social[0][0]}</div>
+                  <div className="ml-4 ">{registerHospitel?.contact.social[0][1]}</div>
                 </div>
               </div>
               <div>
@@ -314,43 +318,26 @@ export const RegisterConfirmModal = () => {
                   <div className="mr-6">
                     <div>
                       <div className="mb-2  font-bold">จำนวนห้องว่าง</div>
-                      <div className="ml-4 ">{`${"360"}`}</div>
+                      <div className="ml-4 ">{registerHospitel?.availableRooms}</div>
                     </div>
                   </div>
                   <div>
-                    <div className="mb-2  font-bold">จำนวนห้องว่างทั้งหมด</div>
-                    <div className="ml-4 ">{`${"360"}`}</div>
+                    <div className="mb-2  font-bold">จำนวนห้องทั้งหมด</div>
+                    <div className="ml-4 ">{registerHospitel?.totalRooms}</div>
                   </div>
                 </div>
 
                 <div className="mb-8">
                   <div className="mb-2 font-bold">หมายเหตุ</div>
                   <div className="ml-4 text-sm">
-                    {`${`   เอกสารที่ต้องเตรียมและส่งให้เจ้าหน้าที่ก่อนเข้ารับการรักษาบัตรประชาชน
-                            ผลการตรวจโควิด 19 ด้วยการใช้ RT-PCR Test ที่ผ่านการรับรองมาตรฐานจากกรมวิทยาศาสตร์การแพทย์
-                            กรณีที่ใช้ประกัน เลขที่กรมธรรม์หรือบัตรประชาชน (ทุกฉบับที่มี)
-                            ผลตรวจ X-Ray ปอด (ถ้ามี)`}`}
+                    {registerHospitel?.note}
                   </div>
                 </div>
 
                 <div className="mb-6">
                   <div className="mb-2 font-bold">สิ่งอำนวยความสะดวก</div>
-                  <div className="ml-4 text-sm">
-                    {[
-                      "Wi-Fi ฟรี",
-                      "เครื่องปรับอากาศ",
-                      "บริการทางการแพทย์",
-                      "บริการเครื่อง X-Ray",
-                      "บริการตรวจเช็คสุขภาพโดยแพทย์ และพยาบาลผู้เชี่ยวชาญผ่านช่องทาง Tele-Medicine",
-                    ].map((str) => (
-                      <div> {str} </div>
-                    ))}
-                    {/* {`${`   Wi-Fi ฟรี \n
-                            เครื่องปรับอากาศ
-                            บริการทางการแพทย์
-                            บริการเครื่อง X-Ray
-                            บริการตรวจเช็คสุขภาพโดยแพทย์ และพยาบาลผู้เชี่ยวชาญผ่านช่องทาง Tele-Medicine
-                            `}`} */}
+                    <div className="ml-4 text-sm">
+                        {registerHospitel?.facility}
                   </div>
                 </div>
                 <div>
@@ -366,21 +353,16 @@ export const RegisterConfirmModal = () => {
               <div className="wrapper-3  ">
                 <div className="mb-8">
                   <div className="mb-4 font-bold ">สถานที่ของ Hospitel</div>
-                  <div
-                    className="rounded-2xl bg-pink-200"
-                    style={{ width: "277px", height: "216px" }}
-                  />
+                    <HospitalLocation selectedHospitalLocation={{lat: registerHospitel?.address.latitude, lng: registerHospitel?.address.longitude}} />
+
                 </div>
                 <div className="mb-8">
                   <div className="mb-2 font-bold ">เข้าร่วมกับโรงพยาบาล</div>
-                  <div className="ml-4"> {"โรงพยาบาลธนบุรี"} </div>
+                              <div className="ml-4">{registerHospitel?.coHospital.name}</div>
                 </div>
                 <div>
                   <div className="mb-4 font-bold ">สถานที่ของโรงพยาบาล</div>
-                  <div
-                    className="rounded-2xl bg-pink-200"
-                    style={{ width: "277px", height: "216px" }}
-                  />
+                    <HospitalLocation selectedHospitalLocation={{lat: registerHospitel?.coHospital.latitude, lng: registerHospitel?.coHospital.longitude}} />
                 </div>
               </div>
             </div>
@@ -390,4 +372,4 @@ export const RegisterConfirmModal = () => {
     default:
       return <div></div>;
   }
-};
+});

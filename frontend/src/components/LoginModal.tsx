@@ -6,6 +6,7 @@ import { Modal, Input, Button, Form } from 'antd';
 import { ReactComponent as NextStepIcon } from '../assets/arrow-right.svg';
 import { ReactComponent as PrevStepIcon } from '../assets/arrow-left.svg';
 import { LoginStep } from './login';
+import { hospitelStore } from 'store/hospitelStore';
 import { RegisterModal } from './RegisterModal';
 import { RegisterFlow } from './RegisterFlow';
 
@@ -14,12 +15,15 @@ export const LoginModal = () => {
     const [step, setStep] = useState('first');
 
     const [loginForm] = Form.useForm();
-    
+    const { setUserLogin } = hospitelStore;
     const handleSubmitForm = () => {
         //TODO: add fetch data
         const value = loginForm.getFieldsValue();
+        localStorage.setItem('username', value.username);
+        localStorage.setItem('password', value.password);
         console.log(value);
         loginForm.resetFields();
+        setUserLogin(true);
         setIsModalVisible(false);
     }
 
@@ -71,19 +75,19 @@ export const LoginModal = () => {
                                 form={loginForm}
                                 onFinish={handleSubmitForm}
                             >
+                                <div className="text-xs font-semibold mb-1">E-Mail or UserName</div>
                                 <Form.Item
                                     name="username"
                                 >
-                                    <div className="text-xs font-semibold mb-1">E-Mail or UserName</div>
                                     <Input className="rounded-3xl py-4" placeholder="eg.: elonmusk@mars.com" />
                                 </Form.Item>
+                                <div className="text-xs font-semibold mb-1">Password</div>
                                 <Form.Item
                                     name="password"
                                 >
-                                    <div className="text-xs font-semibold mb-1">Password</div>
                                     <Input className="rounded-3xl py-4 text-sm" placeholder="eg.: 5246185" />
                                 </Form.Item>
-                            </Form>
+                            
                             <Button
                                 htmlType="submit"
                                 type="primary"
@@ -91,10 +95,10 @@ export const LoginModal = () => {
                                 css={css`
                                     background-color: #682CDA;
                                 `}
-                                // onClick={() => setIsModalVisible(false)}
                             >
                                 เข้าสู่ระบบ
                             </Button>
+                            </Form>
                             <div className="text-xs flex" onClick={() => setStep(LoginStep.REGISTER)}>
                                 <div className="text-gray-400">ไม่มีสมาชิกผู้ใช้</div>
                                 <div className="flex ml-1 cursor-pointer">สมัครสมาชิก<NextStepIcon className="mt-1 ml-2" /></div>

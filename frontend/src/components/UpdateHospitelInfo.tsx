@@ -3,11 +3,11 @@ import { Modal, Input, Button, Form, Select } from "antd";
 import { HospitelLocation } from "./map/HospitelLocation";
 import { HospitalLocation } from "./map/HospitalLocation";
 import { PrimaryButton } from "./Button";
-import { RegisterConfirmModal } from "./RegisterConfirmModal";
 import { hospitelStore } from "store/hospitelStore";
 import { RegisterStep } from "./login";
 import { observer } from 'mobx-react-lite';
 import { HospitelDocument } from "./hospitel";
+
 interface RegisterModalProps {
   setStep: (step: any) => void;
 }
@@ -116,11 +116,9 @@ export const RegisterModal = observer(({ setStep }: RegisterModalProps) => {
           }
       }
   }, [selectedHospitalLocation, selectedHospitelLocation]);
-    
   useEffect(() => {
       setRegisterHospitel(hostipel);
   }, [hostipel]);
-    
   return (
     <Modal
       width={1036}
@@ -137,7 +135,7 @@ export const RegisterModal = observer(({ setStep }: RegisterModalProps) => {
         <div className="grid grid-cols-3 gap-12 mt-6">
           <div>
             <div className="mb-2 font-bold ">ชื่อ Hospitel</div>
-            <Form.Item normalize={(value) => value.trim()} name="name" rules={[{ required: true }]}>
+            <Form.Item normalize={(value) => value.trim()} name="name">
               <Input
                 className="w-64 rounded-2xl px-4 pt-4 pb-5"
                 type="text"
@@ -146,7 +144,7 @@ export const RegisterModal = observer(({ setStep }: RegisterModalProps) => {
             </Form.Item>
             <div className="flex">
               <div className="mb-2  font-bold ">จังหวัด</div>
-              <Form.Item name="province" normalize={(value) => value.trim()} rules={[{ required: true }]}>
+              <Form.Item name="province" normalize={(value) => value.trim()}>
                 <Select
                   placeholder="เลือกจังหวัด"
                   size="small"
@@ -172,7 +170,7 @@ export const RegisterModal = observer(({ setStep }: RegisterModalProps) => {
               </Form.Item>
             </div>
             <div className="font-bold ">ที่อยู่</div>
-            <Form.Item name="address" normalize={(value) => value.trim()} required>
+            <Form.Item name="address" normalize={(value) => value.trim()}>
               <Input
                 className="w-64 rounded-2xl my-2 px-4 pt-4 pb-5"
                 type="text"
@@ -304,7 +302,6 @@ export const RegisterModal = observer(({ setStep }: RegisterModalProps) => {
                 />
               </Form.Item>
             </div>
-
             <div>
               <div className="mb-2 font-bold">สิ่งอำนวยความสะดวก</div>
               <Form.Item name="facility" normalize={(value) => value.trim()}>
@@ -334,7 +331,7 @@ export const RegisterModal = observer(({ setStep }: RegisterModalProps) => {
             </Form.Item>
 
             <div className="mb-2 font-bold ">เข้าร่วมกับโรงพยาบาล</div>
-            <Form.Item name={["coHospital", 'name']} normalize={(value) => value.trim()} rules={[{ required: true }]}>
+            <Form.Item name={["coHospital", 'name']} normalize={(value) => value.trim()}>
               <Input
                 className="w-64 rounded-2xl px-4 pt-4 pb-5"
                 type="text"
@@ -343,7 +340,7 @@ export const RegisterModal = observer(({ setStep }: RegisterModalProps) => {
                       </Form.Item>
             <div className="mb-2 font-bold ">สถานที่ของโรงพยาบาล</div>
           
-            <Form.Item name="coHospital" normalize={(value) => value.trim()} >
+            <Form.Item name="coHospital" normalize={(value) => value.trim()}>
                 <HospitalLocation setSelectedHospitalLocation={setSelectedHospitalLocation}/>  
             </Form.Item>
                       
