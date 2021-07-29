@@ -5,7 +5,7 @@ import { JWT_SECRET } from 'src/config'
 import { getHostpitelbyID } from 'src/hospitel/get'
 
 interface JWTPayload {
-  userId: string
+  _id: string
 }
 
 export function signJWT(payload: JWTPayload): string {
@@ -25,7 +25,7 @@ passport.use(
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     },
     async (payload: JWTPayload, done) => {
-      const user = await getHostpitelbyID(payload.userId)
+      const user = await getHostpitelbyID(payload._id)
       done(null, user)
     },
   ),

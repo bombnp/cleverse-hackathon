@@ -8,7 +8,15 @@ export interface LoginDTO {
   password: string
 }
 
-export async function login({ email, password }: LoginDTO): Promise<string> {
+export interface LoginResponse {
+  token: string
+  _id: string
+}
+
+export async function login({
+  email,
+  password,
+}: LoginDTO): Promise<LoginResponse> {
   const hospitel = await Hospitel.findOne({
     userEmail: email,
   }).select('userPassword')
@@ -20,5 +28,8 @@ export async function login({ email, password }: LoginDTO): Promise<string> {
     throw new HttpError(400, 'invalid password')
   }
 
-  return signJWT({ userId: hospitel._id })
+  return {
+    token: signJWT({ _id: hospitel._id }),
+    _id: hospitel._id,
+  }
 }

@@ -15,8 +15,8 @@ router.post('/login', async (req: Request<{}, {}, LoginDTO>, res: Response) => {
       error: 'email and/or password is missing',
     })
   }
-  const token = await login({ email: body.email, password: body.password })
-  res.json({ token })
+  const response = await login({ email: body.email, password: body.password })
+  res.json(response)
 })
 
 router.post(
