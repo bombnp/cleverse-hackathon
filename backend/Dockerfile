@@ -18,6 +18,7 @@ COPY ["package.json", "yarn.lock", "./"]
 RUN yarn --production
 
 COPY --from=build /dist /dist
-COPY --from=build .env .
+COPY .env .
+COPY credentials.json .
 
 CMD ["node", "/dist/index.js"]
