@@ -2,6 +2,7 @@ import { HospitelDocument } from 'components/hospitel';
 import { action, makeObservable, observable } from 'mobx';
 
 class HospitelStore {
+    hospitelList?: HospitelDocument = undefined;
     selectedHospitel?: HospitelDocument = undefined;
     registerHospitel?: HospitelDocument = undefined;
     loginHospitel?: HospitelDocument = undefined;
@@ -11,10 +12,12 @@ class HospitelStore {
 
     constructor() {
         makeObservable(this, {
+            hospitelList: observable,
             selectedHospitel: observable,
             loginHospitel: observable,
             registerHospitel: observable,
             userLogin: observable,
+            setHospitelList: action,
             setLoginHospitel: action,
             setSelectedHospitel: action,
             setRegisterHospitel: action,
@@ -23,18 +26,23 @@ class HospitelStore {
     }
 
     resetFilterData = () => {
+        this.hospitelList = undefined;
         this.selectedHospitel = undefined;
         this.loginHospitel = undefined;
         this.registerHospitel = undefined;
         this.userLogin = false;
         this.loading = false;
     };
+    
+    setHospitelList = (hospitel: HospitelDocument | undefined) => {
+        this.hospitelList = hospitel;
+    }
 
     setSelectedHospitel = (hospitel: HospitelDocument) => {
         this.selectedHospitel = hospitel;
     };
 
-    setLoginHospitel = (hospitel: HospitelDocument) => {
+    setLoginHospitel = (hospitel: HospitelDocument | undefined) => {
         this.loginHospitel = hospitel;
     }
 

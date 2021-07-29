@@ -1,5 +1,4 @@
 import axios from 'axios';
- 
 import React, { useState, useRef } from 'react';
 import { ReactComponent as UploadIcon } from 'assets/upload-icon.svg';
 import { HospitelImage } from './HospitelImage';
@@ -16,32 +15,36 @@ export const UploadHospitelImage = () => {
 
         const formData = new FormData();
 
-        files.forEach((item: any) => {
-            if (item.type === 'image/png' && item.type === 'image/jpg') {
+        files.forEach((item: any) => { 
+            if (item.type === 'image/png' || item.type === 'image/jpg') {
                 formData.append(
                     "file",
                     item,
                     item?.name
-                );                
+                );
+                
             } else {
                 formData.delete('file');
                 message.error('นามสกุลของไฟล์ภาพต้องเป็น .jpg หรือ .png เท่านั้น');
             }
-            })
-
-        const url = "https://6416fcf7f032.ngrok.io/upload/images";
-        const config = {
-            headers: {
-                'content-type': 'multipart/form-data'
-            }
-        }
-        axios.post(url, formData, config)
-        .then((res:any) => console.log(res))
-        .then((images:any) => {
-            setUploading(false);
-            setImage(images)
         })
-        .catch((error) => console.log(error))
+
+        if (formData) {
+            const url = "http://35.247.17.176:3000/upload/images";
+            const config = {
+                headers: {
+                    'content-type': 'multipart/form-data'
+                }
+            }
+            axios.post(url, formData, config)
+            .then((res:any) => console.log(res))
+            .then((images:any) => {
+                setUploading(false);
+                setImage(images)
+            })
+            .catch((error) => console.log(error))            
+        }
+
     }
 
     const removeImage = (id: string) => {

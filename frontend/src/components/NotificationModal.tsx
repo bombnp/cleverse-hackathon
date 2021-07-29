@@ -4,12 +4,15 @@ import { Global, css } from '@emotion/react';
 import { FormRule, getRule } from '../utils/getRules';
 import { EmailButton, PrimaryButton } from './Button';
 import { hospitelStore } from 'store/hospitelStore';
+import { UpdateHospitelInfo } from './UpdateHospitelInfo';
+import axios from 'axios';
 
 export const NotificationModal = () => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [changedRooms, setChangedRooms] = useState<number>();
     const [emailForm] = Form.useForm();
-    const { userLogin, loading, setLoading } = hospitelStore;
+    const { loading, setLoading } = hospitelStore;
+
   const showModal = () => {
     setIsModalVisible(true);
   };
@@ -17,6 +20,18 @@ export const NotificationModal = () => {
     const [isSubmitted, setIsSubmitted] = useState('#000000');
     const [isAvaliableModalVisible, setIsAvaliableModalVisible] = useState(false);
     const [updateAvailableRoomsForm] = Form.useForm();
+
+
+    const [onLoginClick, setOnLoginClick] = useState(false);
+    
+    const handleClick = (e: any) => {
+    e.preventDefault();
+    setOnLoginClick(true);
+  };
+  const closeModal = (e: any) => {
+    e?.preventDefault();
+    setOnLoginClick(false);
+  };
     
     const onAvailableRoomsFormCancel = () => {
         //TODO: add fetch data
@@ -33,6 +48,7 @@ export const NotificationModal = () => {
         const value = updateAvailableRoomsForm.getFieldsValue();
         setChangedRooms(value.availableRoom);
         console.log(value);
+
         try {
             //TODO: add upload data function
         } catch (error) {
@@ -51,6 +67,15 @@ export const NotificationModal = () => {
     const handleSubmitForm = () => {
         const value = emailForm.getFieldsValue();
         console.log(value);
+
+        axios.post('http://35.247.17.176:3000/subscription', {
+            userEmail: 'na@gmail.com',
+            latitude: 13.791482115548867,
+            longitude: 100.57448217776553
+        })
+        .then((res) => console.log(res))
+        .catch((error) => console.log(error))
+        
         try {
             //TODO: create fetch data
         } catch {
@@ -61,7 +86,7 @@ export const NotificationModal = () => {
         }
     }
 
-    if (userLogin) {
+    if (localStorage.getItem('password') && localStorage.getItem('username')) {
         return (
         <div>   
         <EmailButton className="bg-purple-500" onClick={() => setIsAvaliableModalVisible(true)}>
@@ -75,7 +100,13 @@ export const NotificationModal = () => {
             onCancel={onAvailableRoomsFormCancel}
             centered
         >
-            <div>ออกจากระบบ</div>
+            <div className="cursor-pointer" onClick={() => {
+                localStorage.removeItem('username');
+                localStorage.removeItem('password');
+                window.location.reload();
+            }}>
+                ออกจากระบบ
+            </div>
             <div className="flex flex-col items-center justify-center">
                 <div className="text-xl font-bold">สถานะจำนวนห้องว่างใน Hospitel</div>
                 <div className="text-sm font-bold" css={css`color: #323232;`}>ชื่อ Hospitel : โรงแรมไอบิสกรุงเทพ</div>
@@ -88,12 +119,14 @@ export const NotificationModal = () => {
                 <Form
                     form={updateAvailableRoomsForm}
                     onFinish={handleSubmitAvailableForm}
-                >
+                        >
+                    <div className="flex">
                     <Form.Item
                         name="availableRoom"
+                        rules={[{ required: true, message: 'กรุณากรอกจำนวนห้อง' }]}
                     >
-                                <Input
-                                    type="number"
+                        <Input
+                            type="number"
                             className="rounded-2xl w-40 h-8 mr-3 pl-16"
                             placeholder="xxx"
                         />
@@ -101,17 +134,19 @@ export const NotificationModal = () => {
                     <Button
                         htmlType="submit"
                         type="primary"
-                        className="w-16 h-7 text-white rounded-2xl border-0"
+                        className="w-16 h-7 text-white rounded-2xl border-0 mt-0.5"
                         css={css`background-color: #682CDA`}
                     >
                         ยืนยัน
-                    </Button>
+                    </Button></div>
                 </Form>
+                    </div>
+                    <div className="flex justify-between items-end">
+                        <div>อัพเดท</div>
+                        <Button onClick={handleClick}>แก้ไขข้อมูล Hospitel</Button>                        
             </div>
-            <div>อัพเดท</div>
-            <Button>แก้ไขข้อมูล Hospitel</Button>
-
             </Modal>
+            {onLoginClick && <UpdateHospitelInfo isShow={onLoginClick} onClose={closeModal}/>}
         </div>
         );
     } else {

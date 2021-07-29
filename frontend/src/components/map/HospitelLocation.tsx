@@ -22,7 +22,7 @@ export type SearchBoxType = {
   lng: number;
 };
 
-interface hospitelLocationProps {
+interface HospitelLocationProps {
   selectedHospitelLocation?: any;
   setSelectedHospitelLocation?: (location: any) => void;
 }
@@ -31,7 +31,7 @@ export const HospitelLocation = observer(
   ({
     selectedHospitelLocation,
     setSelectedHospitelLocation,
-  }: hospitelLocationProps) => {
+  }: HospitelLocationProps) => {
     const [myLocation, setMyLocation] = useState<google.maps.LatLng>();
     const [selectedLocation, setSelectedLocation] = useState(false);
     const [searchBox, setSearchBox] = useState<any>(null);
@@ -117,7 +117,7 @@ export const HospitelLocation = observer(
           }}
           zoom={19}
           onClick={(e) => {
-            if (!selectedLocation && !selectedHospitelLocation) {
+            if (!selectedLocation || !selectedHospitelLocation) {
               setMyLocation(
                 new google.maps.LatLng(e.latLng.lat(), e.latLng.lng())
               );
