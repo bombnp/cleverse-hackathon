@@ -11,9 +11,9 @@ import { RegisterModal } from './RegisterModal';
 import { RegisterFlow } from './RegisterFlow';
 
 export const LoginModal = () => {
-    const [isModalVisible, setIsModalVisible] = useState(true);
+    const [isModalVisible, setIsModalVisible] = useState(!(localStorage.getItem('password') && localStorage.getItem('username')));
     const [step, setStep] = useState('first');
-
+    console.log(isModalVisible)
     const [loginForm] = Form.useForm();
     const { setUserLogin } = hospitelStore;
     const handleSubmitForm = () => {
@@ -21,7 +21,6 @@ export const LoginModal = () => {
         const value = loginForm.getFieldsValue();
         localStorage.setItem('username', value.username);
         localStorage.setItem('password', value.password);
-        console.log(value);
         loginForm.resetFields();
         setUserLogin(true);
         setIsModalVisible(false);
@@ -33,6 +32,7 @@ export const LoginModal = () => {
                 <Modal
                     width={361}
                     visible={isModalVisible}
+                    destroyOnClose={true}
                     bodyStyle={{ height: '404px' }}
                     footer={false}
                     onCancel={() => setIsModalVisible(false)}
