@@ -4,10 +4,11 @@
 import { css, jsx } from '@emotion/react';
 import React, { useState } from 'react';
 import { Modal, Input, Button, Form } from 'antd';
+import { EmailButton } from './Button';
 
-export const HospitelInfo = () => {
+export const HospitelChangeAvaliableRooms = () => {
     const [isSubmitted, setIsSubmitted] = useState('#000000');
-    const [isModalVisible, setIsModalVisible] = useState(true);
+    const [isModalVisible, setIsModalVisible] = useState(false);
     const [ updateAvailableRoomsForm ] = Form.useForm();
 
     const handleSubmitForm = () => {
@@ -25,6 +26,10 @@ export const HospitelInfo = () => {
         }
     }
     return (
+        <div>   
+        <EmailButton onClick={() => setIsModalVisible(true)}>
+            กดรับแจ้งเตือนผ่านทาง E-mail
+        </EmailButton>
         <Modal
             width={661}
             visible={isModalVisible}
@@ -68,6 +73,7 @@ export const HospitelInfo = () => {
             <div>อัพเดท</div>
             <Button>แก้ไขข้อมูล Hospitel</Button>
 
-        </Modal>
+            </Modal>
+        </div>
     )
 }

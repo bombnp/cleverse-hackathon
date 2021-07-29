@@ -3,6 +3,7 @@ import axios from 'axios';
 import React, { useState, useRef } from 'react';
 import { ReactComponent as UploadIcon } from 'assets/upload-icon.svg';
 import { HospitelImage } from './HospitelImage';
+import { message } from 'antd';
 
 export const UploadHospitelImage = () => {
     const fileInput = useRef(null);
@@ -16,12 +17,16 @@ export const UploadHospitelImage = () => {
         const formData = new FormData();
 
         files.forEach((item: any) => {
+            if (item.type === 'image/png' && item.type === 'image/jpg') {
                 formData.append(
                     "file",
                     item,
                     item?.name
-                );
-
+                );                
+            } else {
+                formData.delete('file');
+                message.error('นามสกุลของไฟล์ภาพต้องเป็น .jpg หรือ .png เท่านั้น');
+            }
             })
 
         const url = "https://6416fcf7f032.ngrok.io/upload/images";

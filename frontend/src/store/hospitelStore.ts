@@ -6,6 +6,7 @@ class HospitelStore {
     registerHospitel?: HospitelDocument = undefined;
     loginHospitel?: HospitelDocument = undefined;
     userLogin: boolean = false;
+    loading: boolean = false;
 
 
     constructor() {
@@ -26,6 +27,7 @@ class HospitelStore {
         this.loginHospitel = undefined;
         this.registerHospitel = undefined;
         this.userLogin = false;
+        this.loading = false;
     };
 
     setSelectedHospitel = (hospitel: HospitelDocument) => {
@@ -36,12 +38,16 @@ class HospitelStore {
         this.loginHospitel = hospitel;
     }
 
-    setRegisterHospitel = (hospitel: HospitelDocument) => {
+    setRegisterHospitel = (hospitel: HospitelDocument | undefined) => {
         this.registerHospitel = hospitel;
     }
 
     setUserLogin = (login: boolean) => {
         this.userLogin = login;
+    }
+
+    setLoading = (loading2: boolean) => {
+        this.loading = loading2
     }
 }
 
