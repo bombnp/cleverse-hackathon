@@ -1,3 +1,4 @@
+import cors from 'cors'
 import express from 'express'
 import mongoose from 'mongoose'
 import { MONGO_URI, PORT } from './config'
@@ -8,6 +9,8 @@ import subscriptionRouter from './routes/subscription'
 import uploadRouter from './routes/upload'
 
 const app = express()
+
+app.use(cors())
 
 app.get('/', (req, res) => {
   res.status(200).send('Hello, World!')
