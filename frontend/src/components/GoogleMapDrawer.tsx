@@ -49,21 +49,21 @@ export const GoogleMapDrawer = observer(({ visible, setVisible, distance, durati
             <Global
                 styles={css`
             .ant-drawer-left, .ant-drawer-right {
-                height: ${ isSeeMore ? '100%' : '600px'};
+                height: ${ isSeeMore ? '100%' : '640px'};
                 border-top-right-radius: 25px;
                 border-bottom-right-radius: 25px;
                 overflow: scroll;
             }
             
             .ant-drawer-content {
-                height: ${ isSeeMore ? '100%' : '600px'};
+                height: ${ isSeeMore ? '100%' : '640px'};
                 overflow: scroll;
                 border-top-right-radius: 25px;
                 border-bottom-right-radius: 25px;
              }
             
             .ant-drawer-left .ant-drawer-content-wrapper, .ant-drawer-right .ant-drawer-content-wrapper .ant-drawer-content .ant-drawer-content-wrapper-body{
-                height: ${ isSeeMore ? '100%' : '600px'};
+                height: ${ isSeeMore ? '100%' : '640px'};
                 overflow: scroll;
                 border-bottom-right-radius: 25px;
                 border-top-right-radius: 25px;
@@ -87,8 +87,8 @@ export const GoogleMapDrawer = observer(({ visible, setVisible, distance, durati
                 onClose={onClose}
                 visible={visible}
             >
-                <div className="flex flex-col mx-4 mt-8">
-                    <img className="w-full h-56 rounded-2xl" src={logo} alt="hospitel logo" />
+                <div className="flex flex-col mx-4 mt-8 overflow-y-scroll">
+                    {selectedHospitel?.imageUrls?.map((items: any) => <img className="w-full h-56 rounded-2xl" src={items} alt="hospitel logo" />)}
                     <div className="mt-6">
                         <div className="text-3xl">{selectedHospitel?.name}</div>
                         <div
@@ -99,7 +99,7 @@ export const GoogleMapDrawer = observer(({ visible, setVisible, distance, durati
                             {selectedHospitel?.availableRooms ?? 0} ห้อง
                         </div>
                         <div className="flex my-3 text-lg font-semibold underline leading-5">
-                            <PhoneIcon className="-ml-4 mr-2" />
+                            <PhoneIcon className="-ml-4 mr-4" />
                             {selectedHospitel?.contact.phone.map((phone:string) => (
                                 <div>{phone}</div>
                             ))}
@@ -110,7 +110,7 @@ export const GoogleMapDrawer = observer(({ visible, setVisible, distance, durati
                         </div>
                         <div className="flex my-2">
                             <PinIcon className="-ml-4 mr-2 mt-1.5" />
-                            <div>{selectedHospitel?.address ?? '-'}</div>
+                            <div>{selectedHospitel?.address.address ?? '-'}</div>
                         </div>
                         <div>** ห่างจากคุณ {distance} **</div>
                     </div>
@@ -120,7 +120,7 @@ export const GoogleMapDrawer = observer(({ visible, setVisible, distance, durati
                                 <div className="flex font-bold text-lg text-gray-700">
                                     <HandShakeIcon className="-ml-4 mr-2 mt-2.5" />เข้าร่วมกับ
                                 </div>
-                                <div>{selectedHospitel?.coHospital ?? '-' }</div>
+                                <div>{selectedHospitel?.coHospital.name ?? '-' }</div>
                             </div>
                             <div className="my-2">
                             <div className="flex font-bold text-lg text-gray-700">

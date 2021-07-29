@@ -4,11 +4,13 @@ import { ReactComponent as UploadIcon } from 'assets/upload-icon.svg';
 import { HospitelImage } from './HospitelImage';
 import { message } from 'antd';
 
-export const UploadHospitelImage = () => {
+interface UploadHospitelImageProps {
+    setImageData: (imageData: any) => void;
+}
+export const UploadHospitelImage = ({setImageData} : UploadHospitelImageProps) => {
     const fileInput = useRef(null);
     const [uploading, setUploading] = useState(false);
-    const [image, setImage] = useState<any[]>();
-
+    const [image, setImage] = useState<any>([]);
     const onChange = (e: any) => {
         setUploading(true);
         const files = Array.from(e.target.files);
@@ -25,6 +27,7 @@ export const UploadHospitelImage = () => {
                 
             } else {
                 formData.delete('file');
+                setUploading(false);
                 message.error('นามสกุลของไฟล์ภาพต้องเป็น .jpg หรือ .png เท่านั้น');
             }
         })
@@ -37,25 +40,27 @@ export const UploadHospitelImage = () => {
                 }
             }
             axios.post(url, formData, config)
-            .then((res:any) => console.log(res))
-            .then((images:any) => {
-                setUploading(false);
-                setImage(images)
-            })
-            .catch((error) => console.log(error))            
+                .then((res: any) => { setImageData(res.data.urls); setImage(res.data.urls);})
+                .catch((error) => { console.log(error); message.error('อัปโหลดรูปไม่สำเร็จ'); setUploading(false)})
         }
 
-    }
-
-    const removeImage = (id: string) => {
-        setImage(image?.filter((image) => image.public_id !== id));
     }
 
     switch (true) {
         case uploading:
             return <div>Upload...</div>
-        case !!image && image.length > 0:
-          return <HospitelImage images={image} removeImage={removeImage} />
+        case !uploading:
+            return (
+                <div>
+                    <input type='file' id='multi' style={{ display: 'none' }} onChange={onChange} ref={fileInput} multiple/>
+                    <button className='w-24 h-8 bg-white border rounded-2xl px-2' onClick={() => (fileInput as any).current.focus()}>
+                        <label className="flex cursor-pointer items-center justify-center" htmlFor='multi'>
+                            <UploadIcon className="mr-2"/>
+                            <div>อัพโหลด</div>
+                        </label>   
+                    </button>
+                </div>
+            )
         default:
             return (
                 <div>

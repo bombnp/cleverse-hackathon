@@ -6,7 +6,7 @@ import { PrimaryButton } from "./Button";
 import { hospitelStore } from "store/hospitelStore";
 import { RegisterStep } from "./login";
 import { observer } from "mobx-react-lite";
-import { HospitelDocument } from "./hospitel";
+import { HospitelsDocument } from "./hospitel";
 import { UploadHospitelDocument } from "./UploadHospitelDocument";
 
 export const UpdateHospitelInfo = observer(({
@@ -28,7 +28,7 @@ export const UpdateHospitelInfo = observer(({
     const [docFile, setDocFile] = useState<any>();
     const [registerForm] = Form.useForm();
 
-    const [hostipel, setHostipel] = useState<HospitelDocument>();
+    const [hostipel, setHostipel] = useState<HospitelsDocument>();
     const { Option } = Select;
     const { TextArea } = Input;
 
@@ -38,7 +38,8 @@ export const UpdateHospitelInfo = observer(({
         console.log(value.coHospital.name, selectedHospitelLocation)
         if (loginHospitel ||( selectedHospitalLocation && selectedHospitelLocation && docFile)) {
       setHostipel((prev) => ({
-        ...prev,
+          ...prev,
+        _id: loginHospitel?._id ,
         userEmail: loginHospitel?.userEmail ?? value.userEmail,
         userPassword: value.userPassword,
         name: loginHospitel?.name ?? value.name,
@@ -125,7 +126,7 @@ export const UpdateHospitelInfo = observer(({
     minPrice: loginHospitel?.price.minPrice,
     perDays: loginHospitel?.price.perDays,
   },
-  imageUrl: [loginHospitel?.imageUrl],
+  imageUrl: [loginHospitel?.imageUrls],
   documentUrl: loginHospitel?.documentUrl,
   address: {
     province: '',
@@ -157,8 +158,8 @@ export const UpdateHospitelInfo = observer(({
               rules={[{ required: true }]}
             >
               <Input
-                              className="w-64 rounded-2xl px-4 pt-4 pb-5"
-                              defaultValue={loginHospitel?.userEmail}
+                className="w-64 rounded-2xl px-4 pt-4 pb-5"
+                defaultValue={loginHospitel?.userEmail}
                 type="text"
                 placeholder="e.g.: elonmusk@mars.com "
               />

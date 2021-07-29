@@ -18,9 +18,12 @@ export const MapPage = observer(() => {
     }, []);
 
     const fetchHospitelData = () => {
-        axios.get('http://35.247.17.176:3000/hospitels')
-        .then((res) => console.log(res))
-        .then((data: any) => setHospitelList(data?.data))
+        axios.post('http://35.247.17.176:3000/hospitels',
+            {
+                province: 'all',
+                district: 'all'
+            })
+        .then((res:any) => setHospitelList(res.data))
     }
 
     return (

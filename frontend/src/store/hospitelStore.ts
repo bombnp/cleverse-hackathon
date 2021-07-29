@@ -1,11 +1,11 @@
-import { HospitelDocument } from 'components/hospitel';
+import { HospitelDocument, HospitelsDocument } from 'components/hospitel';
 import { action, makeObservable, observable } from 'mobx';
 
 class HospitelStore {
-    hospitelList?: HospitelDocument = undefined;
-    selectedHospitel?: HospitelDocument = undefined;
+    hospitelList: HospitelsDocument[] = [];
+    selectedHospitel?: HospitelsDocument = undefined;
     registerHospitel?: HospitelDocument = undefined;
-    loginHospitel?: HospitelDocument = undefined;
+    loginHospitel?: HospitelsDocument = undefined;
     userLogin: boolean = false;
     loading: boolean = false;
 
@@ -26,7 +26,7 @@ class HospitelStore {
     }
 
     resetFilterData = () => {
-        this.hospitelList = undefined;
+        this.hospitelList = [];
         this.selectedHospitel = undefined;
         this.loginHospitel = undefined;
         this.registerHospitel = undefined;
@@ -34,15 +34,16 @@ class HospitelStore {
         this.loading = false;
     };
     
-    setHospitelList = (hospitel: HospitelDocument | undefined) => {
+    setHospitelList = (hospitel: HospitelsDocument[]) => {
         this.hospitelList = hospitel;
     }
 
-    setSelectedHospitel = (hospitel: HospitelDocument) => {
+    setSelectedHospitel = (hospitel: HospitelsDocument) => {
+        console.log(hospitel);
         this.selectedHospitel = hospitel;
     };
 
-    setLoginHospitel = (hospitel: HospitelDocument | undefined) => {
+    setLoginHospitel = (hospitel: HospitelsDocument | undefined) => {
         this.loginHospitel = hospitel;
     }
 
