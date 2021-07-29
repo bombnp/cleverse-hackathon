@@ -9,7 +9,7 @@ router.use(express.json())
 router.use(express.urlencoded({ extended: true }))
 
 router.get('/', async (req, res) => {
-  const resp = await getHostpitels()
+  const resp = await getHostpitels(req)
   res.send(resp)
 })
 
