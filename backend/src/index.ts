@@ -21,10 +21,13 @@ app.use('/upload', uploadRouter)
 // Error handling
 app.use(errorHandler)
 
+console.log(`Connecting to MongoDB...`)
 mongoose
   .connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then((result) => {
-    app.listen(PORT, () => console.log(`App running on port ${PORT}`))
+    app.listen(PORT, () =>
+      console.log(`Connected! App running on port ${PORT}`),
+    )
   })
   .catch((err) => {
     console.log(err)
