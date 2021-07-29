@@ -26,12 +26,15 @@ export const LoginModal = ({
     const handleSubmitForm = () => {
         const value = loginForm.getFieldsValue();
         try {
-            axios.post('http://35.247.17.176:3000/auth/login', value)
-            .then((res) => {
-                localStorage.setItem('username', res.data.username);
-                localStorage.setItem('password', res.data.password);
-            })
-            .catch((error) => console.log(error))
+            // axios.post('http://35.247.17.176:3000/auth/login', value)
+            // .then((res) => {
+            //     localStorage.setItem('username', res.data.username);
+            //     localStorage.setItem('password', res.data.password);
+            // })
+            // .catch((error) => console.log(error))
+
+                            localStorage.setItem('username', value.username);
+                localStorage.setItem('password', value.password);
         } catch (error) {
             console.error(error)
         } finally {
@@ -126,7 +129,7 @@ export const LoginModal = ({
             );
         case LoginStep.REGISTER:
             return (
-                <RegisterFlow />
+                <RegisterFlow isShow={isShow} onClose={onClose}/>
             );
         default:
             return (

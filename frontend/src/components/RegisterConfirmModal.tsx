@@ -10,24 +10,17 @@ import { RegisterModal } from "./RegisterModal";
 
 interface RegisterConfirmModalProps {
     setStep: (step: any) => void;
+    isShow?: boolean;
+    onClose?: any;
 }
 
-export const RegisterConfirmModal = observer(({ setStep }: RegisterConfirmModalProps) => {
-  const [isModalVisible, setIsModalVisible] = useState(true);
-  const [registerForm] = Form.useForm();
-  //   first
-//   const [step, setStep] = useState("second");
-  const { Option } = Select;
-    const { TextArea } = Input;
+export const RegisterConfirmModal = observer(({ setStep, isShow, onClose }: RegisterConfirmModalProps) => {
+    const [registerForm] = Form.useForm();
     const { registerHospitel } = hospitelStore;
 
   const handleSubmitForm = () => {
-    //TODO: add fetch data
     const value = registerForm.getFieldsValue();
-
-    console.log(value);
-    // setIsModalVisible(false);
-      
+      console.log(registerHospitel?.imageUrl)
       const a = {
                   userEmail: registerHospitel?.userEmail,
   userPassword: registerHospitel?.userPassword,
@@ -37,20 +30,20 @@ export const RegisterConfirmModal = observer(({ setStep }: RegisterConfirmModalP
   price: {
     maxPrice: registerHospitel?.price.maxPrice,
     minPrice: registerHospitel?.price.minPrice,
-    perDays: registerHospitel?.price.perDays,
+    perDays: 14,
   },
-  imageUrl: [],
+  imageUrls: registerHospitel?.imageUrl,
   documentUrl: registerHospitel?.documentUrl,
   address: {
     province: registerHospitel?.address.province,
     district: registerHospitel?.address.district,
     address: registerHospitel?.address.address,
     latitude: registerHospitel?.address.latitude,
-    longitude: registerHospitel?.address.latitude,
+    longitude: registerHospitel?.address.longitude,
   },
   contact: {
-    phone: [registerHospitel?.contact.phone[0]],
-    social: [registerHospitel?.contact.social[0]],
+    phone: [registerHospitel?.contact.phone[0][0]],
+    social: [registerHospitel?.contact.social[0][0]],
   },
   facility: registerHospitel?.facility,
   note: registerHospitel?.note,
@@ -62,80 +55,28 @@ export const RegisterConfirmModal = observer(({ setStep }: RegisterConfirmModalP
   createdAt: registerHospitel?.createdAt,
           updatedAt: registerHospitel?.updatedAt
       }
-      
-//             const a = {
-//                   userEmail: 'na@gmail.com',
-//   userPassword: '122121212',
-//   name: '121',
-//   totalRooms: 12,
-//   availableRooms: 22,
-//   price: {
-//     maxPrice: 12,
-//     minPrice: 222,
-//     perDays: 14,
-//   },
-//   imageUrl: [],
-//   documentUrl: '',
-//   address: {
-//     province: 'กรุงเทพ',
-//     district: 'จตุจักร',
-//     address: 'registerHospitel?.address.address',
-//     latitude: 10.2222,
-//     longitude: 100.112232,
-//   },
-//   contact: {
-//     phone: ['0861231313', '023232888'],
-//     social: ['a', 'b'],
-//   },
-//   facility: 'a',
-//   note: 'a',
-//   coHospital: {
-//     name: 'พญาไทย',
-//     latitude: 10.1111111,
-//     longitude: 100.121212,
-//   },
-//   createdAt: registerHospitel?.createdAt,
-//           updatedAt: registerHospitel?.updatedAt
-//       }
 
-
-            const url = "http://35.247.17.176:3000/auth/register";
-        const config = {
-            headers: {
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
-                'Access-Control-Allow-Headers': '*',
-                'Access-Control-Max-Age': 1728000,
-                'Content-Length': '0',
-                'Content-Type': 'text/plain' 
-            }
-        }
+      try {
+        const url = "http://35.247.17.176:3000/auth/register";
         axios.post(url, a)
         .then((res:any) => console.log(res))
         .catch((error) => console.log(error))
-      
-    //   try {
-    //       axios.post('http://35.247.17.176:3000/auth/register', a)
-    //         .then((res) => console.log(res))
-    //         .catch((error) => console.log(error))
-        
-    //   //TODO: add upload data function
-    // } catch (error) {
-    //   console.error(error);
-    // } finally {
-    //   registerForm.resetFields();
-    // }
+    } catch (error) {
+      console.error(error);
+      } finally {
+        registerForm.resetFields();  
+        onClose();
+    }
   };
       return (
         <Modal
           width={1036}
-          visible={isModalVisible}
+          visible={isShow}
           bodyStyle={{ height: "778px" }}
           footer={false}
-          onCancel={() => setIsModalVisible(false)}
+          onCancel={onClose}
           centered
           >
-              {console.log(registerHospitel)}
           <div className=" font-extrabold text-xl ">ยืนยันข้อมูล Hospitel</div>
           <div className="DISPLAY-WRAPPER">
             <div className=" grid grid-cols-3 gap-12 mt-6">
@@ -144,15 +85,14 @@ export const RegisterConfirmModal = observer(({ setStep }: RegisterConfirmModalP
                   <div className="mb-2 font-bold ">ชื่อ Hospitel</div>
                     <div className="ml-4">{registerHospitel?.name}</div>
                 </div>
-                {/*Jungwad */}
                 <div className="grid grid-cols-2 mb-8">
                   <div>
                     <div className="mb-2  font-bold ">จังหวัด</div>
-                    <div className="ml-4">{"กรุงเทพ"} </div>
+                    <div className="ml-4">{registerHospitel?.address.province} </div>
                   </div>
                   <div>
                     <div className="mb-2  font-bold ">อำเภอ</div>
-                    <div className="ml-4">{"จัตตุโจ้"} </div>
+                    <div className="ml-4">{registerHospitel?.address.district}</div>
                   </div>
                 </div>
                 <div className="mb-8">
@@ -168,14 +108,12 @@ export const RegisterConfirmModal = observer(({ setStep }: RegisterConfirmModalP
                 <div className="mb-8">
                   <div className="mb-2  font-bold ">เบอร์ติดต่อ</div>
                   <div className="ml-4 ">{registerHospitel?.contact.phone[0][0]}</div>
-                  <div className="ml-4 ">{registerHospitel?.contact.phone[0][1]}</div>
                 </div>
                 <div className="mb-8">
                   <div className="mb-2  font-bold ">
                     ช่องทางติดต่ออื่นๆ (Facebook, Line ฯลฯ)
                   </div>
                   <div className="ml-4 ">{registerHospitel?.contact.social[0][0]}</div>
-                  <div className="ml-4 ">{registerHospitel?.contact.social[0][1]}</div>
                 </div>
               </div>
               <div>
@@ -249,7 +187,7 @@ export const RegisterConfirmModal = observer(({ setStep }: RegisterConfirmModalP
             </div>
               </div>
               <div onClick={() => setStep(RegisterStep.FIELD_DATA)}>ย้อน</div>
-              <div onClick={handleSubmitForm}>wป</div>
+              <div onClick={handleSubmitForm}>ไป</div>
           </Modal>
       )
 });

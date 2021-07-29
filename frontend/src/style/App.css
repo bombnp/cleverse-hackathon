@@ -43,8 +43,13 @@ path {
   position: relative;
   margin-bottom: 24px !important;
 }
+
+.ant-form-item-with-help {
+  margin-bottom: 8px !important;
+}
 .ant-form-item-has-error label {
   color: red;
+  margin-bottom: 3px !important;
 }
 
 /* Input */

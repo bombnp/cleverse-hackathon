@@ -14,7 +14,7 @@ import { hospitelStore } from 'store/hospitelStore';
 import {
   NotificationModal
 } from '../NotificationModal';
-import { HospitelDocument } from 'components/hospitel';
+import { HospitelsDocument } from 'components/hospitel';
 import { UserStep } from '../UserStep';
 declare const google: any;
 
@@ -39,7 +39,7 @@ export const GoogleMapContent = observer(({
   const [ selectedLocation, setSelectedLocation ] = useState<google.maps.LatLng>()
   const [map, setMap] = useState(null);
 
-  const { setSelectedHospitel, loading } = hospitelStore;
+  const { setSelectedHospitel, loading, hospitelList } = hospitelStore;
 
   const {
     data: hospitels,
@@ -75,14 +75,11 @@ export const GoogleMapContent = observer(({
   const onLoad = (ref: any) => {
     setMap(ref);
     const notificationDiv = document.createElement('div');
-    const controlButtonDiv = document.createElement('div');
     const loginButtonDiv = document.createElement('div');
 
     ReactDOM.render(<NotificationModal />, notificationDiv);
-    ReactDOM.render(<GoogleMapHospitelFilterBox />, controlButtonDiv);
     ReactDOM.render(<UserStep />, loginButtonDiv);
     ref.controls[google.maps.ControlPosition.TOP_RIGHT].push(notificationDiv);
-    ref.controls[google.maps.ControlPosition.RIGHT_TOP].push(controlButtonDiv);
     ref.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(loginButtonDiv);
 
     navigator.geolocation.getCurrentPosition(function (position) {
@@ -98,7 +95,7 @@ export const GoogleMapContent = observer(({
   })
 
   return (
-    isLoaded ?
+    hospitelList && isLoaded ?
       <div>
         <Global
         styles={css`
@@ -123,13 +120,13 @@ export const GoogleMapContent = observer(({
         onClick={(e) => console.log(e.latLng.lat(), e.latLng.lng())}
       >
           <Marker position={myLocation as google.maps.LatLng} />
-          {hospitels.map((hospitel: HospitelDocument) => (
+          {hospitelList?.map((hospitel: HospitelsDocument) => (
             <Marker
               position={new google.maps.LatLng(hospitel.address.latitude, hospitel.address.longitude)}
               onClick={() => {
+                console.log(hospitel)
                 setVisible(true)
                 setSelectedLocation(new google.maps.LatLng(hospitel.address.latitude, hospitel.address.longitude));
-                console.log(selectedLocation, hospitel)
                 setSelectedHospitel(hospitel);
               }}
               onLoad={marker => {
@@ -139,7 +136,7 @@ export const GoogleMapContent = observer(({
                       fillOpacity: 1,
                       strokeColor: '#000',
                       strokeWeight: 1,
-                      scale: 1.5,
+                      scale: 2,
                     }, opts);
                   
                 marker.setIcon(customIcon({
@@ -155,7 +152,6 @@ export const GoogleMapContent = observer(({
             onPlacesChanged={onPlacesChanged}
             onLoad={onSBLoad}
           >
-            {/* <Input className="w-72 absolute right-16 shadow-lg" onPressEnter={() => console.log('x')} prefix={<SearchIcon />} placeholder="search location..."/> */}
             <input
               type="text"
               placeholder="search location..."

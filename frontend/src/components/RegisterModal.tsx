@@ -8,13 +8,21 @@ import { RegisterStep } from "./login";
 import { observer } from "mobx-react-lite";
 import { HospitelDocument } from "./hospitel";
 import { UploadHospitelDocument } from "./UploadHospitelDocument";
+import { HospitelImage } from "./HospitelImage";
+import { UploadHospitelImage } from "./UploadHospitelImage";
 interface RegisterModalProps {
   setStep: (step: any) => void;
+  isShow?: boolean;
+  onClose?: any;
 }
 
-export const RegisterModal = observer(({ setStep }: RegisterModalProps) => {
+export type ProvinceDistrictType = {
+    id: number;
+    name_th: string;
+}
+
+export const RegisterModal = observer(({ setStep, isShow, onClose }: RegisterModalProps) => {
     const { registerHospitel, setRegisterHospitel } = hospitelStore;
-    const [isModalVisible, setIsModalVisible] = useState(true);
     const [
         selectedHospitalLocation,
         setSelectedHospitalLocation,
@@ -22,19 +30,41 @@ export const RegisterModal = observer(({ setStep }: RegisterModalProps) => {
     const [
         selectedHospitelLocation,
         setSelectedHospitelLocation,
-    ] = useState<any>(registerHospitel ? { lat: registerHospitel?.address.latitude, lng: registerHospitel?.address.longitude} : null);
+    ] = useState<any>(registerHospitel ? { lat: registerHospitel?.address.latitude, lng: registerHospitel?.address.longitude } : null);
+    const [imageData, setImageData] = useState<any[]>();
+    const [province, setProvince] = useState<any>([]);
+    const [district, setDistrict] = useState<any>([]);
+    const [selectProvince, setSelectProvince] = useState<any>();
+    const [selectDistrict, setSelectDistrict] = useState<any>();
     const [docFile, setDocFile] = useState<any>();
     const [registerForm] = Form.useForm();
-
     const [hostipel, setHostipel] = useState<HospitelDocument>();
+
+    const province_api =
+        "https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_province.json";
+    const district_api =
+        "https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_amphure.json";
     const { Option } = Select;
     const { TextArea } = Input;
+    
+
+    const fetchAPI = (api: any, setAPI: (result: any) => void) => {
+    fetch(api)
+      .then((response) => response.json())
+      .then((result) => {
+        setAPI(result);
+      });
+    };
+
+    useEffect(() => {
+        fetchAPI(province_api, setProvince);
+        fetchAPI(district_api, setDistrict);
+    }, []);
 
     const handleSubmitForm = useCallback(() => {
-        //TODO: add fetch data
         const value = registerForm.getFieldsValue();
-        console.log(value.coHospital.name, selectedHospitelLocation)
-        if (registerHospitel ||( selectedHospitalLocation && selectedHospitelLocation)) {
+        console.log(imageData)
+        if (registerHospitel  ||( selectedHospitalLocation && selectedHospitelLocation)) {
       setHostipel((prev) => ({
         ...prev,
         userEmail: registerHospitel?.userEmail ?? value.userEmail,
@@ -48,20 +78,20 @@ export const RegisterModal = observer(({ setStep }: RegisterModalProps) => {
           minPrice: value.minPrice,
           perDays: value.perDays,
         },
-        imageUrl: value.imageUrl,
+        imageUrl: imageData ?? registerHospitel?.imageUrl,
         documentUrl: docFile ?? registerHospitel?.documentUrl,
         address: {
           ...prev?.address,
-          province: value.province,
-          district: '',
+          province: province[selectProvince]?.name_th ?? registerHospitel?.address.province,
+          district: district?.filter((item: any) => item.province_id === selectProvince).find((item:any) => item.id === selectDistrict).name_th ?? registerHospitel?.address.district,
           address: value.address,
           latitude: selectedHospitelLocation.lat ?? registerHospitel?.address.latitude,
-          longitude: selectedHospitelLocation.lat ?? registerHospitel?.address.longitude,
+          longitude: selectedHospitelLocation.lng ?? registerHospitel?.address.longitude,
         },
         contact: {
           ...prev?.contact,
           phone: [value.contact[0].phone],
-          social: ["", ""],
+          social: [value.contact[1].social],
           // social: [value.contact[1].social],
         },
         facility: value.facility,
@@ -75,19 +105,10 @@ export const RegisterModal = observer(({ setStep }: RegisterModalProps) => {
         createdAt: new Date(),
         updatedAt: new Date(),
       }));
-      // setIsModalVisible(false);
-
-      try {
-        //TODO: add upload data function
-        // setRegisterHospitel(hostipel);
-      } catch (error) {
-        console.error(error);
-      } finally {
         setStep(RegisterStep.CONFIRM);
-        //   registerForm.resetFields();
-      }
+        registerForm.resetFields();  
     }
-  }, [selectedHospitalLocation, selectedHospitelLocation, registerHospitel, registerForm, setStep]);
+  }, [selectedHospitalLocation, selectedHospitelLocation, registerHospitel, registerForm, setStep.name, selectProvince, selectDistrict]);
 
   useEffect(() => {
     setRegisterHospitel(hostipel);
@@ -96,11 +117,11 @@ export const RegisterModal = observer(({ setStep }: RegisterModalProps) => {
   return (
     <Modal
       width={1036}
-      visible={isModalVisible}
-      bodyStyle={{ height: "778px" }}
+      visible={isShow}
+      bodyStyle={{ height: "850px" }}
       maskClosable={false}
       footer={false}
-      onCancel={() => setIsModalVisible(false)}
+      onCancel={onClose}
       centered
     >
       <div className=" font-extrabold text-xl ">สมัครสมาชิก Hospitel</div>
@@ -120,8 +141,8 @@ export const RegisterModal = observer(({ setStep }: RegisterModalProps) => {
     minPrice: registerHospitel?.price.minPrice,
     perDays: registerHospitel?.price.perDays,
   },
-  imageUrl: [registerHospitel?.imageUrl],
-  documentUrl: registerHospitel?.documentUrl,
+  imageUrl: imageData ?? registerHospitel?.imageUrl,
+  documentUrl: docFile ?? registerHospitel?.documentUrl,
   address: {
     province: registerHospitel?.address.province,
     district: registerHospitel?.address.district,
@@ -130,8 +151,8 @@ export const RegisterModal = observer(({ setStep }: RegisterModalProps) => {
     longitude: registerHospitel?.address.latitude,
   },
   contact: {
-    phone: [registerHospitel?.contact.phone[0]],
-    social: [registerHospitel?.contact.social[0]],
+    phone: [registerHospitel?.contact.phone[0][0]],
+    social: [registerHospitel?.contact.social[1][0]],
   },
   facility: registerHospitel?.facility,
   note: registerHospitel?.note,
@@ -190,33 +211,56 @@ export const RegisterModal = observer(({ setStep }: RegisterModalProps) => {
               <div className="WRAPPER">
                 <div className="mb-2  font-bold ">จังหวัด</div>
                 <Form.Item
-                  name="province"
-                  normalize={(value) => value.trim()}
-                  rules={[{ required: true }]}
+                    name="province"
+                    rules={[{ required: true }]}
                 >
-                  <Select
-                    placeholder="เลือกจังหวัด"
-                    size="small"
-                    style={{ width: 120 }}
-                  >
-                    <Option key="กรุงเทพ" value="กรุงเทพ">
-                      กรุงเทพ
+                <Select
+                                      placeholder={"เลือกจังหวัด"}
+                                      onChange={(value: any) => setSelectProvince(value)}
+                                      defaultValue={registerHospitel?.address.province}
+                style={{
+                    marginRight: "0.5rem",
+                    borderRadius: "16px",
+                    border: "1px solid #EDEDED",
+                    overflow: "hidden",
+                    padding: "1px 2px",
+                    width: "150px",
+                    backgroundColor: 'white'
+                }}
+                >
+                {province?.map((item: any) => (
+                    <Option key={"pv" + item.id} value={item.id}>
+                        {item.name_th}
                     </Option>
-                  </Select>
+                ))}
+                </Select>
                 </Form.Item>
               </div>
               <div className="WRAPPER">
                 <div className="ml-5 mb-2  font-bold ">อำเภอ</div>
-                <Form.Item name="district" normalize={(value) => value.trim()} rules={[{ required: true }]}>
-                  <Select
-                    placeholder="เลือกอำเภอ"
-                    size="small"
-                    style={{ width: 120, marginLeft: 15 }}
-                  >
-                    <Option key="จตุจักร" value="จตุจักร">
-                      จตุจักร
-                    </Option>
-                  </Select>
+                <Form.Item name="district" rules={[{ required: true }]}>
+                    <Select
+                    placeholder={"เลือกอำเภอ"}
+                    onChange={(value:any) => setSelectDistrict(value)}
+                    style={{
+                        marginRight: "0.5rem",
+                        borderRadius: "16px",
+                        border: "1px solid #EDEDED",
+                        overflow: "hidden",
+                        padding: "1px 2px",
+                        width: "150px",
+                        backgroundColor: 'white'
+                    }}
+                    defaultValue={registerHospitel?.address.district}
+                    >
+                    {district
+                        ?.filter((item: any) => item.province_id === selectProvince)
+                        ?.map((item: any) => (
+                        <Option key={"amp" + item.id} value={item.id}>
+                            {item.name_th}
+                        </Option>
+                    ))}
+                </Select>
                 </Form.Item>
               </div>
             </div>
@@ -224,7 +268,7 @@ export const RegisterModal = observer(({ setStep }: RegisterModalProps) => {
             <Form.Item
               name="address"
               normalize={(value) => value.trim()}
-              rules={[{ required: true }]}
+                rules={[{ required: true }]}
             >
               <Input
                 className="w-64 rounded-2xl mt-2 px-4 pt-4 pb-5"
@@ -240,7 +284,8 @@ export const RegisterModal = observer(({ setStep }: RegisterModalProps) => {
                   <Input
                     className="w-20 rounded-2xl mr-4 mt-2 px-4 pt-4 pb-5"
                     type="text"
-                    placeholder={"xxxx --xxx"}
+                                      placeholder={"xxxx --xxx"}
+                                      defaultValue={registerHospitel?.price.minPrice}
                   />
                 </Form.Item>
                 <span className="pb-4 font-bold">-</span>
@@ -249,6 +294,8 @@ export const RegisterModal = observer(({ setStep }: RegisterModalProps) => {
                     className="w-20 rounded-2xl mx-3 mt-2 px-4 pt-4 pb-5"
                     type="text"
                     placeholder={"xxxx --xxx"}
+                    defaultValue={registerHospitel?.price.maxPrice}
+
                   />
                 </Form.Item>
               </div>
@@ -263,8 +310,7 @@ export const RegisterModal = observer(({ setStep }: RegisterModalProps) => {
               </Form.Item>
             </div>
 
-            <div className="mb-2   -mt-2 font-bold ">เบอร์ติดต่อ</div>
-
+            <div className="mb-2 -mt-2 font-bold ">เบอร์ติดต่อ</div>
             <Form.Item
                 name={["contact", 0, "phone", 0]}
                 normalize={(value) => value.trim()}
@@ -273,7 +319,9 @@ export const RegisterModal = observer(({ setStep }: RegisterModalProps) => {
               <Input
                 className="w-64 rounded-2xl px-4 pt-4 pb-5"
                 type="text"
-                placeholder={"xxxx --xxx"}
+                              placeholder={"xxxx --xxx"}
+                                                                    defaultValue={registerHospitel?.contact.phone}
+
               />
                       </Form.Item>
               <div className="mb-2  -mt-2  font-bold ">
@@ -288,33 +336,9 @@ export const RegisterModal = observer(({ setStep }: RegisterModalProps) => {
                 className="w-64 rounded-2xl -mt-4 px-4 pt-4 pb-5"
                 type="text"
                 placeholder={"xxxx --xxx"}
+                defaultValue={registerHospitel?.contact.social}
               />
             </Form.Item>
-            {/* <div className="face-wrapper">
-
-              <div>
-                <Form.Item
-                  name={["contact", 1, "social", 0]}
-                  normalize={(value) => value.trim()}
-                >
-                  <Input
-                    className="w-64 rounded-2xl px-4 pt-4 pb-5"
-                    type="text"
-                    placeholder={"xxxx --xxx"}
-                  />
-                </Form.Item>
-                <Form.Item
-                  name={["contact", 1, "social", 1]}
-                  normalize={(value) => value.trim()}
-                >
-                  <Input
-                    className="w-64 rounded-2xl px-4 pt-4 pb-5"
-                    type="text"
-                    placeholder={"xxxx --xxx"}
-                  />
-                </Form.Item>
-              </div>
-            </div> */}
           </div>
           <div>
             <Form.Item name="imageUrl" normalize={(value) => value.trim()}>
@@ -322,20 +346,10 @@ export const RegisterModal = observer(({ setStep }: RegisterModalProps) => {
                 อัพโหลดภาพ Hospital (สูงสุด 3 รูป)
               </div>
               <div className="pic-wrapper flex justify-between">
-                <div
-                  className="rounded-2xl bg-blue-200"
-                  style={{ width: "90px", height: "90px" }}
-                />
-
-                <div
-                  className="rounded-2xl bg-blue-200"
-                  style={{ width: "90px", height: "90px" }}
-                />
-                <div
-                  className="rounded-2xl bg-blue-200"
-                  style={{ width: "90px", height: "90px" }}
-                />
-              </div>
+                {imageData?.map((items: any) => <img src={items} style={{width: 90, height: 90}} alt="" />)}
+                
+                </div>
+                <UploadHospitelImage setImageData={setImageData}/>          
             </Form.Item>
             <div className="flex">
               <div>
@@ -348,7 +362,8 @@ export const RegisterModal = observer(({ setStep }: RegisterModalProps) => {
                 >
                   <Input
                     className="w-32  rounded-2xl px-4 pt-4 pb-5"
-                    placeholder={"xxxx --xxx"}
+                                      placeholder={"xxxx --xxx"}
+                                      defaultValue={registerHospitel?.availableRooms}
                   />
                 </Form.Item>
               </div>
@@ -357,12 +372,13 @@ export const RegisterModal = observer(({ setStep }: RegisterModalProps) => {
                 <div className="mb-2 font-bold">จำนวนห้องว่างทั้งหมด</div>
                 <Form.Item
                   name="totalRooms"
-                                  normalize={(value) => value.trim()}
-                                  rules={[{ required: true }]}
+                    normalize={(value) => value.trim()}
+                    rules={[{ required: true }]}
                 >
                   <Input
                     className="w-32  rounded-2xl px-4 pt-4 pb-5"
                     placeholder={"xxxx --xxx"}
+                    defaultValue={registerHospitel?.totalRooms}                  
                   />
                 </Form.Item>
               </div>
@@ -373,7 +389,8 @@ export const RegisterModal = observer(({ setStep }: RegisterModalProps) => {
               <Form.Item name="note" normalize={(value) => value.trim()} rules={[{ required: true }]}>
                 <TextArea
                   className="rounded-2xl px-4 pt-4 pb-5"
-                  placeholder="Controlled autosize"
+                                  placeholder="Controlled autosize"
+                    defaultValue={registerHospitel?.note}
                   autoSize={{ minRows: 3, maxRows: 5 }}
                 />
               </Form.Item>
@@ -383,9 +400,10 @@ export const RegisterModal = observer(({ setStep }: RegisterModalProps) => {
               <div className="mb-2 font-bold">สิ่งอำนวยความสะดวก</div>
               <Form.Item name="facility" normalize={(value) => value.trim()} rules={[{ required: true }]}>
                 <TextArea
-                  className="rounded-2xl px-4 pt-4 pb-5"
-                  autoSize={{ minRows: 3, maxRows: 4 }}
-                  placeholder={"xxxx --xxx"}
+                    className="rounded-2xl px-4 pt-4 pb-5"
+                    autoSize={{ minRows: 3, maxRows: 4 }}
+                    placeholder={"xxxx --xxx"}
+                    defaultValue={registerHospitel?.facility}
                 />
               </Form.Item>
             </div>

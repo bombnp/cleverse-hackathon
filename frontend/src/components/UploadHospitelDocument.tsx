@@ -19,15 +19,12 @@ export const UploadHospitelDocument = ({setDocFile} : UploadHospitelDocumentProp
       
       if (selectedFile !== undefined && selectedFile.type === 'application/pdf') {
         formData.append(
-          "file",
+          'file',
             selectedFile,
             selectedFile?.name
         );
       axios.post('http://35.247.17.176:3000/upload/document', formData)
-      .then((res:any) => console.log(res))
-        .then((res:any) => {
-          setDocFile(res.data);
-        })
+      .then((res:any) => setDocFile(res.data.url))
         .catch((error: any) => console.log(error))        
       } else {
         message.error('นามสกุลไฟล์ต้องเป็น .pdf เท่านั้น');

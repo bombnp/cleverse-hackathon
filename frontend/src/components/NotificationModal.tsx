@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState , useEffect} from 'react';
 import { Modal, Input, Form, message, Button } from 'antd';
 import { Global, css } from '@emotion/react';
 import { FormRule, getRule } from '../utils/getRules';
@@ -10,9 +10,15 @@ import axios from 'axios';
 export const NotificationModal = () => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [changedRooms, setChangedRooms] = useState<number>();
+    const [myLocation, setMyLocation] = useState<any>();
     const [emailForm] = Form.useForm();
     const { loading, setLoading } = hospitelStore;
 
+    useEffect(() => {
+        navigator.geolocation.getCurrentPosition(function (position) {
+           setMyLocation({ lat :position.coords.latitude, lng: position.coords.longitude});
+        })
+    }, []);
   const showModal = () => {
     setIsModalVisible(true);
   };
@@ -68,10 +74,14 @@ export const NotificationModal = () => {
         const value = emailForm.getFieldsValue();
         console.log(value);
 
+        console.log(navigator.geolocation.getCurrentPosition(function (position) {
+            console.log(position.coords.latitude);
+        }));
+
         axios.post('http://35.247.17.176:3000/subscription', {
-            userEmail: 'na@gmail.com',
-            latitude: 13.791482115548867,
-            longitude: 100.57448217776553
+            userEmail: value.email,
+            latitude: myLocation.lat,
+            longitude: myLocation.lng
         })
         .then((res) => console.log(res))
         .catch((error) => console.log(error))
