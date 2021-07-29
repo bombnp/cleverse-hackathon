@@ -19,13 +19,12 @@ router.get('/:_id', async (req, res) => {
   res.send(resp)
 })
 
-router.post('/availablerooms', async (req, res) => {
+// routes below this are protected
+router.use(passport.authenticate('jwt', { session: false }))
+
+router.put('/availablerooms', async (req, res) => {
   const resp = await updateAvailableRoom(req)
   await nearestAlert()
   res.json(resp)
 })
-
-// routes below this are protected
-router.use(passport.authenticate('jwt', { session: false }))
-
 export default router

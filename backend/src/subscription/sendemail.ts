@@ -42,9 +42,6 @@ export async function sendEmail(
       },
       axiosConfig,
     )
-    .then(function (response) {
-      console.log(response)
-    })
     .catch(function (error) {
       console.log(error)
     })
