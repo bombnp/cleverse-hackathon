@@ -9,19 +9,26 @@ import { LoginModal } from './LoginModal';
 
 export const UserStep = () => {
     const { userLogin } = hospitelStore;
-    const [ onLoginClick, setOnLoginClick ] = useState(false);
+    const [onLoginClick, setOnLoginClick] = useState(true);
+    
+    const handleClick = (e: any) => {
+    e.preventDefault();
+    setOnLoginClick(true);
+  };
+  const closeModal = (e: any) => {
+    e?.preventDefault();
+    setOnLoginClick(false);
+  };
 
     if (!localStorage.getItem('password') && !localStorage.getItem('username')) {
         return (
             <div>
-                <LoginButton
-                    onClick={() => {
-                        setOnLoginClick(!onLoginClick)
-                    }}
-                >
-                    เข้าสู่ระบบ
-                </LoginButton>
-                { onLoginClick ? <LoginModal />  : null }
+            <LoginButton onClick={handleClick}>เข้าสู่ระบบ</LoginButton>
+      <div>
+        {onLoginClick && (
+          <LoginModal isShow={onLoginClick} onClose={closeModal} />
+        )}
+      </div>
                 
             </div>            
         )

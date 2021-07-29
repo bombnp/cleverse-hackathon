@@ -9,40 +9,56 @@ import { LoginStep } from './login';
 import { hospitelStore } from 'store/hospitelStore';
 import { RegisterModal } from './RegisterModal';
 import { RegisterFlow } from './RegisterFlow';
+import axios from 'axios';
 
-export const LoginModal = () => {
-    const [isModalVisible, setIsModalVisible] = useState(!(localStorage.getItem('password') && localStorage.getItem('username')));
+export const LoginModal = ({
+  isShow,
+  onClose,
+}: {
+  isShow?: boolean;
+  onClose?: any;
+}) => {
+    const [isModalVisible, setIsModalVisible] = useState(true);
     const [step, setStep] = useState('first');
-    console.log(isModalVisible)
     const [loginForm] = Form.useForm();
     const { setUserLogin } = hospitelStore;
+    
     const handleSubmitForm = () => {
-        //TODO: add fetch data
         const value = loginForm.getFieldsValue();
-        localStorage.setItem('username', value.username);
-        localStorage.setItem('password', value.password);
-        loginForm.resetFields();
-        setUserLogin(true);
-        setIsModalVisible(false);
+        try {
+            axios.post('http://35.247.17.176:3000/auth/login', value)
+            .then((res) => {
+                localStorage.setItem('username', res.data.username);
+                localStorage.setItem('password', res.data.password);
+            })
+            .catch((error) => console.log(error))
+        } catch (error) {
+            console.error(error)
+        } finally {
+            loginForm.resetFields();
+            setUserLogin(true);
+            onClose();            
+        }
     }
 
     switch (step) {
         case LoginStep.FIRST:
             return (
                 <Modal
-                    width={361}
-                    visible={isModalVisible}
-                    destroyOnClose={true}
-                    bodyStyle={{ height: '404px' }}
-                    footer={false}
-                    onCancel={() => setIsModalVisible(false)}
-                    centered
+                     width={361}
+          visible={isShow}
+          destroyOnClose={true}
+          bodyStyle={{ height: "404px" }}
+          footer={false}
+          onCancel={onClose}
+          onOk={onClose}
+          centered
                 >
                     <div className="flex flex-col items-center justify-center">
                         <Button
                             type="primary"
                             className="w-52 h-10 my-4 bg-blue-500 text-white rounded-3xl text-lg font-semibold border-0"
-                            onClick={() => setIsModalVisible(false)}
+                            onClick={onClose}
                             css={css`
                                 background-color: #682CDA;
                             `}
@@ -59,9 +75,10 @@ export const LoginModal = () => {
                 <Modal
                     width={361}
                     bodyStyle={{ height: '404px' }}
-                    visible={isModalVisible}
+                    visible={isShow}
                     footer={false}
-                    onCancel={() => setIsModalVisible(false)}
+                    onCancel={onClose}
+                    onOk={onClose}
                     centered
                 >
                     <PrevStepIcon onClick={() => setStep(LoginStep.FIRST)} className="cursor-pointer" />

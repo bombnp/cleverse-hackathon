@@ -117,7 +117,7 @@ export const HospitalLocation = observer(
           }}
           zoom={19}
           onClick={(e) => {
-            if (!selectedLocation && !selectedHospitalLocation) {
+            if (!selectedLocation || !selectedHospitalLocation) {
               setMyLocation(
                 new google.maps.LatLng(e.latLng.lat(), e.latLng.lng())
               );

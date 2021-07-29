@@ -151,15 +151,15 @@ export const GoogleMapContent = observer(({
             
           ))}
 
-          <StandaloneSearchBox
+          {map && <StandaloneSearchBox
             onPlacesChanged={onPlacesChanged}
             onLoad={onSBLoad}
           >
-          {/* <Input className="w-72 absolute right-16 shadow-lg" onPressEnter={() => console.log('x')} prefix={<SearchIcon />} placeholder="search location..."/> */}
-          <input
+            {/* <Input className="w-72 absolute right-16 shadow-lg" onPressEnter={() => console.log('x')} prefix={<SearchIcon />} placeholder="search location..."/> */}
+            <input
               type="text"
-            placeholder="search location..."
-            style={{
+              placeholder="search location..."
+              style={{
                 boxSizing: 'border-box',
                 border: `1px solid transparent`,
                 width: `300px`,
@@ -174,8 +174,8 @@ export const GoogleMapContent = observer(({
                 right: '70px',
                 padding: '0 5px'
               }}
-              />
-          </StandaloneSearchBox>
+            />
+          </StandaloneSearchBox>}
         <DistanceMatrixService
           options={{
             destinations: [selectedLocation as google.maps.LatLng],
