@@ -4,11 +4,12 @@ import { HospitelLocation } from "./map/HospitelLocation";
 import { HospitalLocation } from "./map/HospitalLocation";
 import { SubmitButton } from "./Button";
 import { hospitelStore } from "store/hospitelStore";
+import { FormRule, getRule } from '../utils/getRules';
 import { observer } from "mobx-react-lite";
 import { HospitelsDocument } from "./hospitel";
 import { UploadHospitelDocument } from "./UploadHospitelDocument";
 import { UploadHospitelImage } from "./UploadHospitelImage";
-interface UpdateHospitelInfoProps {
+interface RegisterModalProps {
   isShow?: boolean;
   onClose?: any;
 }
@@ -18,8 +19,8 @@ export type ProvinceDistrictType = {
     name_th: string;
 }
 
-export const UpdateHospitelInfo = observer(({ isShow, onClose }: UpdateHospitelInfoProps) => {
-    const { loginHospitel, setLoginHospitel} = hospitelStore;
+export const UpdateHospitelInfo = observer(({ isShow, onClose }: RegisterModalProps) => {
+    const { loginHospitel, setLoginHospitel } = hospitelStore;
     const [
         selectedHospitalLocation,
         setSelectedHospitalLocation,
@@ -75,7 +76,7 @@ export const UpdateHospitelInfo = observer(({ isShow, onClose }: UpdateHospitelI
           minPrice: value.minPrice,
           perDays: value.perDays,
         },
-        imageUrls: imageData ?? loginHospitel?.imageUrls,
+        imageUrl: imageData ?? loginHospitel?.imageUrls,
         documentUrl: docFile ?? loginHospitel?.documentUrl,
         address: {
           ...prev?.address,
@@ -101,7 +102,6 @@ export const UpdateHospitelInfo = observer(({ isShow, onClose }: UpdateHospitelI
         createdAt: new Date(),
         updatedAt: new Date(),
       }));
-        onClose();
         registerForm.resetFields();  
     }
   }, [selectedHospitalLocation, selectedHospitelLocation, loginHospitel, registerForm, selectProvince, selectDistrict]);
@@ -116,13 +116,15 @@ export const UpdateHospitelInfo = observer(({ isShow, onClose }: UpdateHospitelI
     <Modal
       width={1036}
       visible={isShow}
-      bodyStyle={{ height: "875px" }}
+      bodyStyle={{ minHeight: "778px" }}
       maskClosable={false}
       footer={false}
-      onCancel={onClose}
+          onCancel={() => {
+              onClose();
+              registerForm.resetFields();
+          }}
       centered
       >
-          {console.log('ress',loginHospitel?.userPassword)}
       <div className=" font-extrabold text-xl ">สมัครสมาชิก Hospitel</div>
           <Form
               form={registerForm}
@@ -137,10 +139,23 @@ export const UpdateHospitelInfo = observer(({ isShow, onClose }: UpdateHospitelI
                   maxPrice: loginHospitel?.price.maxPrice,
                   minPrice: loginHospitel?.price.minPrice,
                   perDay: loginHospitel?.price.perDays,
+                //   price: {
+                //       maxPrice: loginHospitel?.price.maxPrice,
+                //       minPrice: loginHospitel?.price.minPrice,
+                //       perDays: loginHospitel?.price.perDays,
+                //   },
                   imageUrl: loginHospitel?.imageUrls,
                   documentUrl: loginHospitel?.documentUrl,
-
+                //   address: {
+                //       province: loginHospitel?.address.province,
+                //       district: loginHospitel?.address.district,
+                //       address: loginHospitel?.address.address,
+                //       latitude: loginHospitel?.address.latitude,
+                //       longitude: loginHospitel?.address.latitude,
+                //   },
+                //   province: loginHospitel?.address.province,
                   address: loginHospitel?.address.address,
+                //   district: loginHospitel?.address.district,
 
                 phone: loginHospitel?.contact.phone,
 
@@ -162,7 +177,10 @@ export const UpdateHospitelInfo = observer(({ isShow, onClose }: UpdateHospitelI
                       <Form.Item
                           normalize={(value) => value.trim()}
                           name="userEmail"
-                          rules={[{ required: true }]}
+                                rules={[
+                                    getRule(FormRule.REQUIRE, 'กรุณากรอกอีเมล'),
+                                    getRule(FormRule.EMAIL)
+                                ]}
                       >
                           <Input
                               className="w-64 rounded-2xl px-4 pt-4 pb-5"
@@ -176,7 +194,10 @@ export const UpdateHospitelInfo = observer(({ isShow, onClose }: UpdateHospitelI
                       <Form.Item
                           normalize={(value) => value.trim()}
                           name="userPassword"
-                          rules={[{ required: true }]}
+                          rules={[
+                                    getRule(FormRule.REQUIRE, 'กรุณากรอกรหัสผ่าน'),
+                                    getRule(FormRule.PASSWORD)
+                          ]}
                       >
                           <Input
                               className="w-64 rounded-2xl px-4 pt-4 pb-5"
@@ -188,7 +209,7 @@ export const UpdateHospitelInfo = observer(({ isShow, onClose }: UpdateHospitelI
                       <Form.Item
                           normalize={(value) => value.trim()}
                           name="name"
-                          rules={[{ required: true }]}
+                          rules={[{ required: true , message: 'กรุณากรอกชื่อ Hospitel'}]}
                       >
                           <Input
                               className="w-64 rounded-2xl px-4 pt-4 pb-5"
@@ -201,7 +222,7 @@ export const UpdateHospitelInfo = observer(({ isShow, onClose }: UpdateHospitelI
                               <div className="mb-2  font-bold ">จังหวัด</div>
                               <Form.Item
                                   name="province"
-                                  rules={[{ required: true }]}
+                                  rules={[{ required: true, message: 'กรุณาเลือกจังหวัด' }]}
                               >
                                   <Select
                                       placeholder={"เลือกจังหวัด"}
@@ -226,7 +247,7 @@ export const UpdateHospitelInfo = observer(({ isShow, onClose }: UpdateHospitelI
                           </div>
                           <div className="WRAPPER">
                               <div className="ml-5 mb-2  font-bold ">อำเภอ</div>
-                              <Form.Item name="district" rules={[{ required: true }]}>
+                              <Form.Item name="district" rules={[{ required: true , message: 'กรุณาเลือกอำเภอ'}]}>
                                   <Select
                                       placeholder={"เลือกอำเภอ"}
                                       onChange={(value: any) => setSelectDistrict(value)}
@@ -251,11 +272,11 @@ export const UpdateHospitelInfo = observer(({ isShow, onClose }: UpdateHospitelI
                               </Form.Item>
                           </div>
                       </div>
-                      <div className="font-bold  -mt-2 ">ที่อยู่</div>
+                      <div className="font-bold -mt-2 ">ที่อยู่</div>
                       <Form.Item
                         normalize={(value) => value.trim()}
                         name="address"
-                        rules={[{ required: true }]}
+                        rules={[{ required: true , message: 'กรุณากรอกที่อยู่'}]}
                       >
                           <Input
                               className="w-64 rounded-2xl mt-2 px-4 pt-4 pb-5"
@@ -266,7 +287,7 @@ export const UpdateHospitelInfo = observer(({ isShow, onClose }: UpdateHospitelI
                       <div className="mb-2 font-bold  -mt-2 ">ราคา</div>
                       <div className="flex">
                           <div className="flex items-center justify-center">
-                              <Form.Item name="minPrice" normalize={(value) => value.trim()} rules={[{ required: true }]}>
+                              <Form.Item name="minPrice" normalize={(value) => value.trim()} rules={[{ required: true , message: 'กรุณากรอกราคาต่ำสุด'}]}>
                                   <Input
                                       className="w-20 rounded-2xl mr-3 mt-2 px-4 pt-4 pb-5"
                                       type="text"
@@ -274,7 +295,7 @@ export const UpdateHospitelInfo = observer(({ isShow, onClose }: UpdateHospitelI
                                   />
                               </Form.Item>
                               <span className="pb-4 font-bold">-</span>
-                              <Form.Item name="maxPrice" normalize={(value) => value.trim()} rules={[{ required: true }]}>
+                              <Form.Item name="maxPrice" normalize={(value) => value.trim()} rules={[{ required: true , message: 'กรุณากรอกราคาสูงสุด' }]}>
                                   <Input
                                       className="w-20 rounded-2xl mx-3 mt-2 px-4 pt-4 pb-5"
                                       type="text"
@@ -297,7 +318,7 @@ export const UpdateHospitelInfo = observer(({ isShow, onClose }: UpdateHospitelI
                       <Form.Item
                           name="phone"
                           normalize={(value) => value.trim()}
-                          rules={[{ required: true }]}
+                          rules={[{ required: true, message: 'กรุณากรอกเบอร์โทรศัพท์' }]}
                       >
                           <Input
                               className="w-64 rounded-2xl px-4 pt-4 pb-5"
@@ -312,7 +333,6 @@ export const UpdateHospitelInfo = observer(({ isShow, onClose }: UpdateHospitelI
                       <Form.Item
                           name="social"
                           normalize={(value) => value.trim()}
-                          rules={[{ required: true }]}
                       >
                           <Input
                               className="w-64 rounded-2xl -mt-4 px-4 pt-4 pb-5"
@@ -322,12 +342,12 @@ export const UpdateHospitelInfo = observer(({ isShow, onClose }: UpdateHospitelI
                       </Form.Item>
                   </div>
                   <div>
-                      <Form.Item name="imageUrl" normalize={(value) => value.trim()}>
+                    <Form.Item name="imageUrl" normalize={(value) => value.trim()} rules={[{ required: loginHospitel?.imageUrls ? !loginHospitel?.imageUrls : !imageData , message: 'กรุณาอัปโหลดไฟล์รูปภาพ'}]}>
                           <div className="mb-2  font-bold">
                               อัพโหลดภาพ Hospital (สูงสุด 3 รูป)
                           </div>
                           <div className="pic-wrapper flex justify-between">
-                              {(loginHospitel?.imageUrls ?? imageData)?.map((items: any) => <img src={items} style={{ width: 90, height: 90, marginBottom: 5 }} alt="" />)}
+                              {(imageData ?? loginHospitel?.imageUrls )?.map((items: any) => <img src={items} style={{ width: 90, height: 90, marginBottom: 5 }} alt="" />)}
                 
                           </div>
                           <UploadHospitelImage setImageData={setImageData} />
@@ -338,7 +358,7 @@ export const UpdateHospitelInfo = observer(({ isShow, onClose }: UpdateHospitelI
                               <Form.Item
                                   name="availableRooms"
                                   normalize={(value) => value.trim()}
-                                  rules={[{ required: true }]}
+                                  rules={[{ required: true , message: 'กรอกจำนวนห้องว่าง'}]}
                               >
                                   <Input
                                       className="w-32  rounded-2xl px-4 pt-4 pb-5"
@@ -348,11 +368,11 @@ export const UpdateHospitelInfo = observer(({ isShow, onClose }: UpdateHospitelI
                           </div>
 
                           <div>
-                              <div className="mb-2 font-bold">จำนวนห้องว่างทั้งหมด</div>
+                              <div className="mb-2 font-bold">จำนวนห้องทั้งหมด</div>
                               <Form.Item
                                   name="totalRooms"
                                   normalize={(value) => value.trim()}
-                                  rules={[{ required: true }]}
+                                  rules={[{ required: true, message: 'กรอกจำนวนห้องทั้งหมด' }]}
                               >
                                   <Input
                                       className="w-32 rounded-2xl px-4 pt-4 pb-5"
@@ -364,7 +384,7 @@ export const UpdateHospitelInfo = observer(({ isShow, onClose }: UpdateHospitelI
 
                       <div>
                           <div className="mb-2 font-bold">หมายเหตุ</div>
-                          <Form.Item name="note" normalize={(value) => value.trim()} rules={[{ required: true }]}>
+                          <Form.Item name="note" normalize={(value) => value.trim()}>
                               <TextArea
                                   className="rounded-2xl px-4 pt-4 pb-5"
                                   autoSize={{ minRows: 3, maxRows: 5 }}
@@ -375,7 +395,7 @@ export const UpdateHospitelInfo = observer(({ isShow, onClose }: UpdateHospitelI
 
                       <div>
                           <div className="mb-2 font-bold">สิ่งอำนวยความสะดวก</div>
-                          <Form.Item name="facility" normalize={(value) => value.trim()} rules={[{ required: true }]}>
+                          <Form.Item name="facility" normalize={(value) => value.trim()}>
                               <TextArea
                                   className="rounded-2xl px-4 pt-4 pb-5"
                                   autoSize={{ minRows: 3, maxRows: 4 }}
@@ -384,7 +404,7 @@ export const UpdateHospitelInfo = observer(({ isShow, onClose }: UpdateHospitelI
                           </Form.Item>
                       </div>
 
-                      <Form.Item rules={[{ required: true }]}>
+                      <Form.Item name="documentUrl" rules={[{ required: docFile , message: 'กรุณาอัปโหลดเอกสารอนุญาตการเปิด Hospitel'}]}>
                           <div className="mb-2 font-bold">
                               อัปโหลดเอกสารอนุญาตการเปิด Hospitel
                           </div>
@@ -393,8 +413,8 @@ export const UpdateHospitelInfo = observer(({ isShow, onClose }: UpdateHospitelI
                   </div>
                   <div className="wrapper-3">
                       <div className="mb-2 font-bold ">สถานที่ของ Hospitel</div>
-
-                      <Form.Item>
+                        <div className="text-xs text-gray-500 mb-2">ปักหมุดและกดยืนยันสถานที่</div>
+                      <Form.Item rules={[{ required: true , message: 'กรุณาปักหมุดสถานที่และกดยืนยันสถานที่'}]}>
                           <HospitelLocation
                               selectedHospitelLocation={selectedHospitelLocation}
                               setSelectedHospitelLocation={setSelectedHospitelLocation}
@@ -405,7 +425,7 @@ export const UpdateHospitelInfo = observer(({ isShow, onClose }: UpdateHospitelI
                       <Form.Item
                           name={["coHospital", "name"]}
                           normalize={(value) => value.trim()}
-                          rules={[{ required: true }]}
+                          rules={[{ required: true, message: 'กรุณากรอกโรงพยาบาลที่เข้าร่วม' }]}
                       >
                           <Input
                               className="w-64 rounded-2xl px-4 pt-4 pb-5"
@@ -414,8 +434,8 @@ export const UpdateHospitelInfo = observer(({ isShow, onClose }: UpdateHospitelI
                           />
                       </Form.Item>
                       <div className="mb-2 -mt-2 font-bold">สถานที่ของโรงพยาบาล</div>
-
-                      <Form.Item name="coHospital" normalize={(value) => value.trim()} rules={[{ required: true }]}>
+                        <div className="text-xs text-gray-500 mb-2">ปักหมุดและกดยืนยันสถานที่</div>
+                      <Form.Item name="coHospital" normalize={(value) => value.trim()} rules={[{ required: true , message: 'กรุณาปักหมุดสถานที่และกดยืนยันสถานที่'}]}>
                           <HospitalLocation
                               selectedHospitalLocation={selectedHospitalLocation} setSelectedHospitalLocation={setSelectedHospitalLocation}
                           />
@@ -427,7 +447,7 @@ export const UpdateHospitelInfo = observer(({ isShow, onClose }: UpdateHospitelI
                   className="text-white absolute -bottom-4 right-4 bg-purple-700 rounded-2xl px-8"
                   type="primary"
               >
-                ยืนยัน
+                  ถัดไป
               </SubmitButton>
           </Form>
     </Modal>

@@ -370,11 +370,11 @@ export const RegisterModal = observer(({ setStep, isShow, onClose }: RegisterMod
                           </div>
 
                           <div>
-                              <div className="mb-2 font-bold">จำนวนห้องว่างทั้งหมด</div>
+                              <div className="mb-2 font-bold">จำนวนห้องทั้งหมด</div>
                               <Form.Item
                                   name="totalRooms"
                                   normalize={(value) => value.trim()}
-                                  rules={[{ required: true, message: 'กรอกจำนวนห้องว่างทั้งหมด' }]}
+                                  rules={[{ required: true, message: 'กรอกจำนวนห้องทั้งหมด' }]}
                               >
                                   <Input
                                       className="w-32 rounded-2xl px-4 pt-4 pb-5"

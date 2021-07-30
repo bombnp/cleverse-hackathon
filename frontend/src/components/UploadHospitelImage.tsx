@@ -13,22 +13,15 @@ export const UploadHospitelImage = ({setImageData} : UploadHospitelImageProps) =
     const onChange = (e: any) => {
         setUploading(true);
         const files = Array.from(e.target.files);
-
         const formData = new FormData();
 
         files.forEach((item: any) => { 
-            if (item.type === 'image/png' || item.type === 'image/jpg') {
+            
                 formData.append(
                     "file",
                     item,
                     item?.name
                 );
-                
-            } else {
-                formData.delete('file');
-                setUploading(false);
-                message.error('นามสกุลของไฟล์ภาพต้องเป็น .jpg หรือ .png เท่านั้น');
-            }
         })
 
         if (formData) {
@@ -39,7 +32,11 @@ export const UploadHospitelImage = ({setImageData} : UploadHospitelImageProps) =
                 }
             }
             axios.post(url, formData, config)
-                .then((res: any) => { setImageData(res.data.urls); setImage(res.data.urls); setUploading(false);})
+                .then((res: any) => {
+                    setImageData(res.data.urls);
+                    setImage(res.data.urls);
+                    setUploading(false);
+                })
                 .catch((error) => { console.log(error); message.error('อัปโหลดรูปไม่สำเร็จ'); setUploading(false)})
         }
 
