@@ -58,10 +58,7 @@ export const RegisterConfirmModal = observer(({ setStep, isShow, onClose }: Regi
         const url = "http://35.247.17.176:3000/auth/register";
         axios.post(url, confirmValue)
             .then((res: any) => {
-                message.success('สำเร็จ');
-                setTimeout(() =>
-                    window.location.reload()
-                , 3000);
+                message.success('สมัครสมาชิกสำเร็จ');
             })
             .catch((error) => {
                 message.error('เกิดข้อผิดพลาด ไม่สามารถสมัครสมาชิกได้');
@@ -77,15 +74,16 @@ export const RegisterConfirmModal = observer(({ setStep, isShow, onClose }: Regi
   };
       return (
         <Modal
-          width={1036}
-          visible={isShow}
-          bodyStyle={{ height: "800px" }}
-          footer={false}
-          onCancel={onClose}
-          centered
-          >
-                    {console.log(registerHospitel?.imageUrl)}
-
+            width={1036}
+            visible={isShow}
+            bodyStyle={{ height: "800px" }}
+            footer={false}
+            onCancel={() => {
+                onClose();
+                setRegisterHospitel(undefined);
+            }}
+            centered
+        >
           <div className=" font-extrabold text-xl ">ยืนยันข้อมูล Hospitel</div>
           <div className="DISPLAY-WRAPPER">
             <div className=" grid grid-cols-3 gap-12 mt-6">

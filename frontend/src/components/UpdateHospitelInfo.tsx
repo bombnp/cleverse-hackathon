@@ -122,7 +122,7 @@ export const UpdateHospitelInfo = observer(({ isShow, onClose }: UpdateHospitelI
       onCancel={onClose}
       centered
       >
-          {console.log('ress',loginHospitel?.address.address)}
+          {console.log('ress',loginHospitel?.userPassword)}
       <div className=" font-extrabold text-xl ">สมัครสมาชิก Hospitel</div>
           <Form
               form={registerForm}
