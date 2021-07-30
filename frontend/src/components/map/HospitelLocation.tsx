@@ -4,7 +4,6 @@
 import { Global, css, jsx } from "@emotion/react";
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
-import { useHospitels } from "../../hooks/useHospitels";
 import {
   useLoadScript,
   GoogleMap,
@@ -13,7 +12,6 @@ import {
 } from "@react-google-maps/api";
 import { Spin } from "antd";
 import { observer } from "mobx-react-lite";
-import { hospitelStore } from "store/hospitelStore";
 
 declare const google: any;
 
@@ -38,16 +36,6 @@ export const HospitelLocation = observer(
     const [center, setCenter] = useState<google.maps.LatLng>();
     const [map, setMap] = useState(null);
 
-    const { setSelectedHospitel } = hospitelStore;
-
-    const {
-      data: hospitels,
-      // execute: getHospitels
-    } = useHospitels();
-
-    // useEffect(() => {
-    //   getHospitels();
-    // }, []);
 
     const ConfirmButton = () => {
       return (
@@ -135,7 +123,7 @@ export const HospitelLocation = observer(
               (selectedHospitelLocation ?? myLocation) as google.maps.LatLng
             }
           />
-          {!selectedHospitelLocation && (
+          {(!selectedHospitelLocation || !selectedLocation) && (
             <StandaloneSearchBox
               onPlacesChanged={onPlacesChanged}
               onLoad={onSBLoad}

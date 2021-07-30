@@ -3,7 +3,6 @@ import { GoogleMapDrawer } from '../components/GoogleMapDrawer';
 import { GoogleMapContent } from '../components/map/GoogleMapContent';
 import { LoginModal } from '../components/LoginModal';
 import { hospitelStore } from 'store/hospitelStore';
-import { UploadHospitelImage } from 'components/UploadHospitelImage';
 import axios from 'axios';
 import { observer } from 'mobx-react-lite';
 
@@ -31,7 +30,6 @@ export const MapPage = observer(() => {
             <GoogleMapContent setVisible={setVisible} setDistance={setDistance} setDuration={setDuration} />
             <GoogleMapDrawer visible={visible} setVisible={setVisible} distance={distance} duration={duration} />
             <LoginModal />
-            {/* <UploadHospitelImage /> */}
         </div>
     )
 });

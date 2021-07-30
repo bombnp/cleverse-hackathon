@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import axios from 'axios';
-import { Modal, Input, Button, Form, Select } from "antd";
+import { Modal, Form, message } from "antd";
 import { hospitelStore } from "store/hospitelStore";
 import { observer } from 'mobx-react-lite';
 import { RegisterStep } from "./login";
 import { HospitelLocation } from "./map/HospitelLocation";
 import { HospitalLocation } from "./map/HospitalLocation";
-import { RegisterModal } from "./RegisterModal";
+import { SubmitButton } from "./Button";
 
 interface RegisterConfirmModalProps {
     setStep: (step: any) => void;
@@ -16,12 +16,10 @@ interface RegisterConfirmModalProps {
 
 export const RegisterConfirmModal = observer(({ setStep, isShow, onClose }: RegisterConfirmModalProps) => {
     const [registerForm] = Form.useForm();
-    const { registerHospitel } = hospitelStore;
+    const { registerHospitel, setRegisterHospitel } = hospitelStore;
 
   const handleSubmitForm = () => {
-    const value = registerForm.getFieldsValue();
-      console.log(registerHospitel?.imageUrl)
-      const a = {
+      const confirmValue = {
                   userEmail: registerHospitel?.userEmail,
   userPassword: registerHospitel?.userPassword,
   name: registerHospitel?.name,
@@ -42,8 +40,8 @@ export const RegisterConfirmModal = observer(({ setStep, isShow, onClose }: Regi
     longitude: registerHospitel?.address.longitude,
   },
   contact: {
-    phone: [registerHospitel?.contact.phone[0][0]],
-    social: [registerHospitel?.contact.social[0][0]],
+    phone: registerHospitel?.contact.phone,
+    social: registerHospitel?.contact.social,
   },
   facility: registerHospitel?.facility,
   note: registerHospitel?.note,
@@ -58,12 +56,21 @@ export const RegisterConfirmModal = observer(({ setStep, isShow, onClose }: Regi
 
       try {
         const url = "http://35.247.17.176:3000/auth/register";
-        axios.post(url, a)
-        .then((res:any) => console.log(res))
-        .catch((error) => console.log(error))
+        axios.post(url, confirmValue)
+            .then((res: any) => {
+                message.success('สำเร็จ');
+                setTimeout(() =>
+                    window.location.reload()
+                , 3000);
+            })
+            .catch((error) => {
+                message.error('เกิดข้อผิดพลาด ไม่สามารถสมัครสมาชิกได้');
+                registerForm.resetFields();
+                setRegisterHospitel(undefined);
+            })
     } catch (error) {
       console.error(error);
-      } finally {
+    } finally {
         registerForm.resetFields();  
         onClose();
     }
@@ -72,11 +79,13 @@ export const RegisterConfirmModal = observer(({ setStep, isShow, onClose }: Regi
         <Modal
           width={1036}
           visible={isShow}
-          bodyStyle={{ height: "778px" }}
+          bodyStyle={{ height: "800px" }}
           footer={false}
           onCancel={onClose}
           centered
           >
+                    {console.log(registerHospitel?.imageUrl)}
+
           <div className=" font-extrabold text-xl ">ยืนยันข้อมูล Hospitel</div>
           <div className="DISPLAY-WRAPPER">
             <div className=" grid grid-cols-3 gap-12 mt-6">
@@ -103,17 +112,17 @@ export const RegisterConfirmModal = observer(({ setStep, isShow, onClose }: Regi
                 </div>
                 <div className="mb-8">
                   <div className="mb-2 font-bold ">ราคา</div>
-                  <div className="ml-4 ">{`${registerHospitel?.price.minPrice ?? 0} -  ${registerHospitel?.price.maxPrice ?? 0}   ${registerHospitel?.price.perDays}`}</div>
+                  <div className="ml-4 ">{`${registerHospitel?.price.minPrice ?? 0} -  ${registerHospitel?.price.maxPrice ?? 0} ต่อ14วัน`}</div>
                 </div>
                 <div className="mb-8">
                   <div className="mb-2  font-bold ">เบอร์ติดต่อ</div>
-                  <div className="ml-4 ">{registerHospitel?.contact.phone[0][0]}</div>
+                  <div className="ml-4 ">{registerHospitel?.contact.phone}</div>
                 </div>
                 <div className="mb-8">
                   <div className="mb-2  font-bold ">
                     ช่องทางติดต่ออื่นๆ (Facebook, Line ฯลฯ)
                   </div>
-                  <div className="ml-4 ">{registerHospitel?.contact.social[0][0]}</div>
+                  <div className="ml-4 ">{registerHospitel?.contact.social}</div>
                 </div>
               </div>
               <div>
@@ -121,20 +130,8 @@ export const RegisterConfirmModal = observer(({ setStep, isShow, onClose }: Regi
                   <div className="mb-2  font-bold">
                     อัพโหลดภาพ Hospital (สูงสุด 3 รูป)
                   </div>
-                  <div className="pic-wrapper flex justify-between">
-                    <div
-                      className="rounded-2xl bg-blue-200"
-                      style={{ width: "90px", height: "90px" }}
-                    />
-
-                    <div
-                      className="rounded-2xl bg-blue-200"
-                      style={{ width: "90px", height: "90px" }}
-                    />
-                    <div
-                      className="rounded-2xl bg-blue-200"
-                      style={{ width: "90px", height: "90px" }}
-                    />
+                        <div className="pic-wrapper flex justify-between">
+                        {registerHospitel?.imageUrl?.map((items: any) => <img src={items} style={{width: 90, height: 90, marginBottom: 5}} alt="" />)}
                   </div>
                 </div>
                 <div className=" mb-8 grid grid-cols-2">
@@ -164,7 +161,7 @@ export const RegisterConfirmModal = observer(({ setStep, isShow, onClose }: Regi
                   </div>
                 </div>
                 <div>
-                  <div className="mb-4 font-bold">
+                  <div className="mb-2 font-bold">
                     อัปโหลดเอกสารอนุญาตการเปิด Hospitel
                   </div>
                   {registerHospitel?.documentUrl}
@@ -175,19 +172,35 @@ export const RegisterConfirmModal = observer(({ setStep, isShow, onClose }: Regi
                   <div className="mb-4 font-bold">สถานที่ของ Hospitel</div>
                     <HospitelLocation selectedHospitelLocation={{lat: registerHospitel?.address.latitude, lng: registerHospitel?.address.longitude}} />
                 </div>
-                <div className="mb-8">
+                <div className="mb-2">
                   <div className="mb-2 font-bold ">เข้าร่วมกับโรงพยาบาล</div>
-                              <div className="ml-4">{registerHospitel?.coHospital.name}</div>
+                    <div className="ml-4">{registerHospitel?.coHospital.name}</div>
                 </div>
                 <div>
-                  <div className="mb-4 font-bold">สถานที่ของโรงพยาบาล</div>
+                  <div className="mb-2 font-bold">สถานที่ของโรงพยาบาล</div>
                     <HospitalLocation selectedHospitalLocation={{lat: registerHospitel?.coHospital.latitude, lng: registerHospitel?.coHospital.longitude}} />
                 </div>
               </div>
             </div>
               </div>
-              <div onClick={() => setStep(RegisterStep.FIELD_DATA)}>ย้อน</div>
-              <div onClick={handleSubmitForm}>ไป</div>
+              <div className="absolute right-10 mt-6">
+                    <SubmitButton
+                        onClick={() => setStep(RegisterStep.FIELD_DATA)}
+                className="text-white bg-purple-700 rounded-2xl px-8 mr-5"
+                type="primary"
+                >
+                ย้อนกลับ
+                    </SubmitButton>
+                    <SubmitButton
+                        onClick={handleSubmitForm}
+                htmlType="submit"
+                className="text-white bg-purple-700 rounded-2xl px-8"
+                type="primary"
+                >
+                ยืนยัน
+                </SubmitButton>                  
+              </div>
+
           </Modal>
       )
 });

@@ -20,7 +20,7 @@ export const UserStep = () => {
     setOnLoginClick(false);
   };
 
-    if (!localStorage.getItem('password') && !localStorage.getItem('username')) {
+    if (!localStorage.getItem('password') && !localStorage.getItem('email')) {
         return (
             <div>
             <LoginButton onClick={handleClick}>เข้าสู่ระบบ</LoginButton>
@@ -36,7 +36,7 @@ export const UserStep = () => {
         return (
             <LoginButton
                 onClick={() => {
-                    localStorage.removeItem('username');
+                    localStorage.removeItem('email');
                     localStorage.removeItem('password');
                     window.location.reload();
                 }}

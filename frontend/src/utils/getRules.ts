@@ -2,6 +2,7 @@ export enum FormRule {
   REQUIRE = 'require',
   EMAIL = 'email',
   PHONE_NUMBER = 'phoneNumber',
+  PASSWORD = 'password',
   UPLOAD_REQUIRE = 'upload-require',
   IS_URL = 'is-url'
 }
@@ -24,6 +25,12 @@ export const getRule = (
     return {
       pattern: new RegExp(/^0\(?([0-9]{2})\)?[- ]?([0-9]{3})[- ]?([0-9]{4})$/), // eslint-disable-line no-useless-escape
       message: 'รูปแบบเบอร์โทรศัพท์ไม่ถูกต้อง'
+    };
+  
+  if (type === FormRule.PASSWORD)
+    return {
+      pattern: new RegExp(/^(.{0,7}|[^0-9]*|[^A-Z]*|[^a-z]*|[a-zA-Z0-9]*)$/), // eslint-disable-line no-useless-escape
+      message: 'รูปแบบรหัสผ่านไม่ถูกต้อง'
     };
 
   if (type === FormRule.UPLOAD_REQUIRE)

@@ -4,7 +4,6 @@
 import { Global, css, jsx } from "@emotion/react";
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
-import { useHospitels } from "../../hooks/useHospitels";
 import {
   useLoadScript,
   GoogleMap,
@@ -13,7 +12,7 @@ import {
 } from "@react-google-maps/api";
 import { Spin } from "antd";
 import { observer } from "mobx-react-lite";
-import { hospitelStore } from "store/hospitelStore";
+import classNames from 'classnames';
 
 declare const google: any;
 
@@ -38,24 +37,16 @@ export const HospitalLocation = observer(
     const [center, setCenter] = useState<google.maps.LatLng>();
     const [map, setMap] = useState(null);
 
-    const { setSelectedHospitel } = hospitelStore;
-
-    const {
-      data: hospitels,
-      // execute: getHospitels
-    } = useHospitels();
-
-    // useEffect(() => {
-    //   getHospitels();
-    // }, []);
-
     const ConfirmButton = () => {
       return (
         <div
-          className=" py-2 px-4 cursor-pointer bg-white -mt-12 shadow-2xl text-purple-600 text-center rounded-2xl"
+              className={classNames("py-2 px-4 cursor-pointer -mt-12 shadow-2xl text-center rounded-2xl", {
+                  'bg-white text-purple-600 ': !selectedLocation,
+                  'bg-gray-400 text-white': selectedLocation
+              })}
           onClick={() => setSelectedLocation(true)}
         >
-          ยืนยันสถานที่
+            {selectedLocation ? 'ยืนยันสถานที่ีเรียบร้อย' : 'ยืนยันสถานที่'}
         </div>
       );
     };
@@ -135,7 +126,7 @@ export const HospitalLocation = observer(
               (selectedHospitalLocation ?? myLocation) as google.maps.LatLng
             }
           />
-          {!selectedHospitalLocation && (
+          {(!selectedHospitalLocation || !selectedLocation) && (
             <StandaloneSearchBox
               onPlacesChanged={onPlacesChanged}
               onLoad={onSBLoad}
