@@ -1,7 +1,6 @@
 import axios from 'axios';
 import React, { useState, useRef } from 'react';
 import { ReactComponent as UploadIcon } from 'assets/upload-icon.svg';
-import { HospitelImage } from './HospitelImage';
 import { message } from 'antd';
 
 interface UploadHospitelImageProps {
