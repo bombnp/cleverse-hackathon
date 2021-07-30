@@ -7,6 +7,7 @@ import { RegisterStep } from "./login";
 import { HospitelLocation } from "./map/HospitelLocation";
 import { HospitalLocation } from "./map/HospitalLocation";
 import { SubmitButton } from "./Button";
+import { API_URL } from "config/config";
 
 interface RegisterConfirmModalProps {
     setStep: (step: any) => void;
@@ -55,7 +56,7 @@ export const RegisterConfirmModal = observer(({ setStep, isShow, onClose }: Regi
       }
 
       try {
-        const url = "http://35.247.17.176:3000/auth/register";
+        const url = `${API_URL}/auth/register`;
         axios.post(url, confirmValue)
             .then((res: any) => {
                 message.success('สมัครสมาชิกสำเร็จ');

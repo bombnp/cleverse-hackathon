@@ -9,6 +9,7 @@ import { LoginStep } from './login';
 import { hospitelStore } from 'store/hospitelStore';
 import { RegisterFlow } from './RegisterFlow';
 import axios from 'axios';
+import { API_URL } from 'config/config';
 
 export const LoginModal = ({
   isShow,
@@ -23,7 +24,7 @@ export const LoginModal = ({
     const { setUserLogin, setLoginHospitel } = hospitelStore;
     
     const getMyHospitel = ( access_token : any, id : any) => {
-        axios.get(`http://35.247.17.176:3000/hospitels/${id}`,{
+        axios.get(`${API_URL}/hospitels/${id}`,{
         headers: {
             'Authorization': `${access_token}`
         }})
@@ -41,7 +42,7 @@ export const LoginModal = ({
     const handleSubmitForm = () => {
         const value = loginForm.getFieldsValue();
         console.log(value)
-            axios.post('http://35.247.17.176:3000/auth/login', value)
+            axios.post(`${API_URL}/auth/login`, value)
                 .then((res) => {
                 getMyHospitel(res.data.token, res.data._id)
                 localStorage.setItem('email', value.email);

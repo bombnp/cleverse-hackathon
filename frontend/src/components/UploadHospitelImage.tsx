@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useState, useRef } from 'react';
 import { ReactComponent as UploadIcon } from 'assets/upload-icon.svg';
 import { message } from 'antd';
+import { API_URL } from 'config/config';
 
 interface UploadHospitelImageProps {
     setImageData: (imageData: any) => void;
@@ -25,7 +26,7 @@ export const UploadHospitelImage = ({setImageData} : UploadHospitelImageProps) =
         })
 
         if (formData) {
-            const url = "http://35.247.17.176:3000/upload/images";
+            const url = `${API_URL}/upload/images`;
             const config = {
                 headers: {
                     'content-type': 'multipart/form-data'
