@@ -12,16 +12,17 @@ export const NotificationModal = () => {
     const [changedRooms, setChangedRooms] = useState<number>();
     const [myLocation, setMyLocation] = useState<any>();
     const [emailForm] = Form.useForm();
-    const { loading, setLoading } = hospitelStore;
+    const { loading, setLoading, loginHospitel } = hospitelStore;
 
     useEffect(() => {
         navigator.geolocation.getCurrentPosition(function (position) {
            setMyLocation({ lat :position.coords.latitude, lng: position.coords.longitude});
         })
     }, []);
-  const showModal = () => {
-    setIsModalVisible(true);
-  };
+
+    const showModal = () => {
+        setIsModalVisible(true);
+    };
 
     const [isSubmitted, setIsSubmitted] = useState('#000000');
     const [isAvaliableModalVisible, setIsAvaliableModalVisible] = useState(false);
@@ -56,7 +57,13 @@ export const NotificationModal = () => {
         console.log(value);
 
         try {
-            //TODO: add upload data function
+            axios.post('http://35.247.17.176:3000/hospitels/availablerooms', {
+                headers: {
+                    'Authorization': `${localStorage.getItem('access_token')}`
+                }
+            }, )
+            .then((res) => console.log(res))
+            .then((error) => console.log(error))
         } catch (error) {
             console.error(error);
         } finally {
@@ -66,25 +73,22 @@ export const NotificationModal = () => {
             setIsSubmitted('#682CDA');
         }
     }
-  const handleCancel = () => {
-    setIsModalVisible(false);
-  };
+
+    const handleCancel = () => {
+        setIsModalVisible(false);
+    };
     
     const handleSubmitForm = () => {
         const value = emailForm.getFieldsValue();
         console.log(value);
-
-        console.log(navigator.geolocation.getCurrentPosition(function (position) {
-            console.log(position.coords.latitude);
-        }));
 
         axios.post('http://35.247.17.176:3000/subscription', {
             userEmail: value.email,
             latitude: myLocation.lat,
             longitude: myLocation.lng
         })
-        .then((res) => console.log(res))
-        .catch((error) => console.log(error))
+        .then((res) => message.success('ยืนยันอีเมลสำเร็จ'))
+        .catch((error) => { console.log(error); message.error('ยืนยันอีเมล์ไม่สำเร็จ')})
         
         try {
             //TODO: create fetch data
@@ -96,11 +100,11 @@ export const NotificationModal = () => {
         }
     }
 
-    if (localStorage.getItem('password') && localStorage.getItem('username')) {
+    if (localStorage.getItem('email') && localStorage.getItem('password')) {
         return (
         <div>   
-        <EmailButton className="bg-purple-500" onClick={() => setIsAvaliableModalVisible(true)}>
-            อัพเดต
+        <EmailButton className="bg-purple-700 text-white font-bold" onClick={() => setIsAvaliableModalVisible(true)}>
+            อัพเดตห้องว่าง/แก้ไขข้อมูล
         </EmailButton>
         <Modal
             width={661}
@@ -111,7 +115,7 @@ export const NotificationModal = () => {
             centered
         >
             <div className="cursor-pointer" onClick={() => {
-                localStorage.removeItem('username');
+                localStorage.removeItem('email');
                 localStorage.removeItem('password');
                 window.location.reload();
             }}>
@@ -119,11 +123,11 @@ export const NotificationModal = () => {
             </div>
             <div className="flex flex-col items-center justify-center">
                 <div className="text-xl font-bold">สถานะจำนวนห้องว่างใน Hospitel</div>
-                <div className="text-sm font-bold" css={css`color: #323232;`}>ชื่อ Hospitel : โรงแรมไอบิสกรุงเทพ</div>
+                        <div className="text-sm font-bold" css={css`color: #323232;`}>ชื่อ Hospitel : {loginHospitel?.name}</div>
                 <div className="flex items-end">
                     <div className="text-sm font-bold">จำนวนห้องว่าง</div>
-                            <div className="text-6xl font-bold mx-2" css={css`color: ${isSubmitted}`}>{changedRooms}</div>
-                    <div className="text-sm font-bold" css={css`color: #B1B1B1;`}>จาก 587</div>
+                            <div className="text-6xl font-bold mx-2" css={css`color: ${isSubmitted}`}>{loginHospitel?.availableRooms ?? changedRooms}</div>
+                            <div className="text-sm font-bold" css={css`color: #B1B1B1;`}>จาก {loginHospitel?.totalRooms}</div>
                 </div>
                 <div className="text-sm font-bold mt-6 mb-2" css={css`color: #682CDA`}>อัปเดตจำนวนห้องว่างในช่องด้านล่าง</div>
                 <Form

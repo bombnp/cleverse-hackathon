@@ -2,12 +2,11 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/react';
 import React, { useState } from 'react';
-import { Modal, Input, Button, Form } from 'antd';
+import { Modal, Input, Button, Form, message } from 'antd';
 import { ReactComponent as NextStepIcon } from '../assets/arrow-right.svg';
 import { ReactComponent as PrevStepIcon } from '../assets/arrow-left.svg';
 import { LoginStep } from './login';
 import { hospitelStore } from 'store/hospitelStore';
-import { RegisterModal } from './RegisterModal';
 import { RegisterFlow } from './RegisterFlow';
 import axios from 'axios';
 
@@ -21,27 +20,38 @@ export const LoginModal = ({
     const [isModalVisible, setIsModalVisible] = useState(true);
     const [step, setStep] = useState('first');
     const [loginForm] = Form.useForm();
-    const { setUserLogin } = hospitelStore;
+    const { setUserLogin, setLoginHospitel } = hospitelStore;
     
+    const getMyHospitel = ( access_token : any, id : any) => {
+        axios.get(`http://35.247.17.176:3000/hospitels/${id}`,{
+        headers: {
+            'Authorization': `${access_token}`
+        }})
+            .then((res) => {
+                console.log(res.data);
+                setLoginHospitel(res.data);
+                message.success('เข้าสู่ระบบสำเร็จ');
+            })
+            .catch((error) => {
+                console.log(error);
+                message.error('เข้าสู่ระบบไม่สำเร็จ')
+            })
+    }
+
     const handleSubmitForm = () => {
         const value = loginForm.getFieldsValue();
-        try {
-            // axios.post('http://35.247.17.176:3000/auth/login', value)
-            // .then((res) => {
-            //     localStorage.setItem('username', res.data.username);
-            //     localStorage.setItem('password', res.data.password);
-            // })
-            // .catch((error) => console.log(error))
-
-                            localStorage.setItem('username', value.username);
+        console.log(value)
+            axios.post('http://35.247.17.176:3000/auth/login', value)
+                .then((res) => {
+                getMyHospitel(res.data.token, res.data._id)
+                localStorage.setItem('email', value.email);
                 localStorage.setItem('password', value.password);
-        } catch (error) {
-            console.error(error)
-        } finally {
-            loginForm.resetFields();
-            setUserLogin(true);
-            onClose();            
-        }
+                localStorage.setItem('access_token', res.data.token)
+                loginForm.resetFields();
+                setUserLogin(true);
+                onClose();
+            })
+            .catch((error) => console.log(error))
     }
 
     switch (step) {
@@ -97,15 +107,17 @@ export const LoginModal = ({
                             >
                                 <div className="text-xs font-semibold mb-1">E-Mail or UserName</div>
                                 <Form.Item
-                                    name="username"
+                                    name="email"
+                                    rules={[{ required: true, message: 'กรุณากรอกอีเมล' }]}
                                 >
-                                    <Input className="rounded-3xl py-4" placeholder="eg.: elonmusk@mars.com" />
+                                    <Input className="rounded-3xl py-5 mt-1" placeholder="eg.: elonmusk@mars.com" />
                                 </Form.Item>
                                 <div className="text-xs font-semibold mb-1">Password</div>
                                 <Form.Item
                                     name="password"
+                                    rules={[{ required: true, message: 'กรุณากรอกรหัสผ่าน' }]}
                                 >
-                                    <Input className="rounded-3xl py-4 text-sm" placeholder="eg.: 5246185" />
+                                    <Input.Password className="rounded-3xl text-sm" placeholder="eg.: 5246185" />
                                 </Form.Item>
                             
                             <Button

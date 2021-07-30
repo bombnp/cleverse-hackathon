@@ -24,6 +24,15 @@ export const EmailButton = ({ children, className, ...restProps }: any) => (
   </button>
 );
 
+export const SubmitButton = ({ children, className, ...restProps }: any) => (
+  <button
+    type="button"
+    className={`w-26 h-8 rounded-2xl text-sm font-bold outline-none z-10 my-2 mt-2 shadow-lg ${className}`}
+    {...restProps}
+  >
+    {children}
+  </button>
+);
 export const LoginButton = ({ children, className, ...restProps }: any) => (
   <button
     type="button"

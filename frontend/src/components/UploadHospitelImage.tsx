@@ -40,7 +40,7 @@ export const UploadHospitelImage = ({setImageData} : UploadHospitelImageProps) =
                 }
             }
             axios.post(url, formData, config)
-                .then((res: any) => { setImageData(res.data.urls); setImage(res.data.urls);})
+                .then((res: any) => { setImageData(res.data.urls); setImage(res.data.urls); setUploading(false);})
                 .catch((error) => { console.log(error); message.error('อัปโหลดรูปไม่สำเร็จ'); setUploading(false)})
         }
 
@@ -49,11 +49,11 @@ export const UploadHospitelImage = ({setImageData} : UploadHospitelImageProps) =
     switch (true) {
         case uploading:
             return <div>Upload...</div>
-        case !uploading:
+        case !!image || image.length > 0:
             return (
                 <div>
                     <input type='file' id='multi' style={{ display: 'none' }} onChange={onChange} ref={fileInput} multiple/>
-                    <button className='w-24 h-8 bg-white border rounded-2xl px-2' onClick={() => (fileInput as any).current.focus()}>
+                    <button className='w-24 h-8 bg-white border rounded-2xl px-2 z-10' onClick={() => (fileInput as any).current.focus()}>
                         <label className="flex cursor-pointer items-center justify-center" htmlFor='multi'>
                             <UploadIcon className="mr-2"/>
                             <div>อัพโหลด</div>
@@ -65,7 +65,7 @@ export const UploadHospitelImage = ({setImageData} : UploadHospitelImageProps) =
             return (
                 <div>
                     <input type='file' id='multi' style={{ display: 'none' }} onChange={onChange} ref={fileInput} multiple/>
-                    <button className='w-24 h-8 bg-white border rounded-2xl px-2' onClick={() => (fileInput as any).current.focus()}>
+                    <button className='w-24 h-8 bg-white border rounded-2xl px-2 z-10' onClick={() => (fileInput as any).current.focus()}>
                         <label className="flex cursor-pointer items-center justify-center" htmlFor='multi'>
                             <UploadIcon className="mr-2"/>
                             <div>อัพโหลด</div>

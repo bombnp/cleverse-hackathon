@@ -88,7 +88,7 @@ export const GoogleMapDrawer = observer(({ visible, setVisible, distance, durati
                 visible={visible}
             >
                 <div className="flex flex-col mx-4 mt-8 overflow-y-scroll">
-                    {selectedHospitel?.imageUrls?.map((items: any) => <img className="w-full h-56 rounded-2xl" src={items} alt="hospitel logo" />)}
+                    {selectedHospitel?.imageUrls? <img className="w-full h-56 rounded-2xl" src={selectedHospitel?.imageUrls[0]} alt="hospitel logo" /> : ''}
                     <div className="mt-6">
                         <div className="text-3xl">{selectedHospitel?.name}</div>
                         <div
