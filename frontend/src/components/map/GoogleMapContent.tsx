@@ -2,13 +2,10 @@
 /** @jsx jsx */
 
 import { Global, css, jsx } from '@emotion/react';
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import ReactDOM from 'react-dom';
-import { ReactComponent as SearchIcon } from '../../assets/search-icon.svg';
-import { useHospitels } from '../../hooks/useHospitels';
-import { GoogleMapHospitelFilterBox } from '../GoogleMapHospitelFilterBox';
 import { useLoadScript, GoogleMap, StandaloneSearchBox, Marker, DistanceMatrixService } from '@react-google-maps/api';
-import { Spin, Input } from 'antd';
+import { Spin } from 'antd';
 import { observer } from 'mobx-react-lite';
 import { hospitelStore } from 'store/hospitelStore';
 import {
@@ -39,16 +36,7 @@ export const GoogleMapContent = observer(({
   const [ selectedLocation, setSelectedLocation ] = useState<google.maps.LatLng>()
   const [map, setMap] = useState(null);
 
-  const { setSelectedHospitel, loading, hospitelList } = hospitelStore;
-
-  const {
-    data: hospitels,
-    // execute: getHospitels
-  } = useHospitels();
-
-  // useEffect(() => {
-  //   getHospitels();
-  // }, []);
+  const { setSelectedHospitel, hospitelList } = hospitelStore;
 
   const calculateRoom = (value:number) => {
     var percentage = (value / 100) * 100;
@@ -83,7 +71,7 @@ export const GoogleMapContent = observer(({
     ref.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(loginButtonDiv);
 
     navigator.geolocation.getCurrentPosition(function (position) {
-        let location = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+      let location = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
         setMyLocation(location);
     });
   }

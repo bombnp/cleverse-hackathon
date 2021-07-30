@@ -121,10 +121,12 @@ export const RegisterModal = observer(({ setStep, isShow, onClose }: RegisterMod
       bodyStyle={{ minHeight: "778px" }}
       maskClosable={false}
       footer={false}
-      onCancel={onClose}
+          onCancel={() => {
+              onClose();
+              registerForm.resetFields();
+          }}
       centered
       >
-          {console.log('ress',registerHospitel?.address.address)}
       <div className=" font-extrabold text-xl ">สมัครสมาชิก Hospitel</div>
           <Form
               form={registerForm}
@@ -333,7 +335,6 @@ export const RegisterModal = observer(({ setStep, isShow, onClose }: RegisterMod
                       <Form.Item
                           name="social"
                           normalize={(value) => value.trim()}
-                          rules={[{ required: true }]}
                       >
                           <Input
                               className="w-64 rounded-2xl -mt-4 px-4 pt-4 pb-5"
@@ -343,12 +344,12 @@ export const RegisterModal = observer(({ setStep, isShow, onClose }: RegisterMod
                       </Form.Item>
                   </div>
                   <div>
-                      <Form.Item name="imageUrl" normalize={(value) => value.trim()} rules={[{ required: true , message: 'กรุณาอัปโหลดไฟล์รูปภาพ'}]}>
+                    <Form.Item name="imageUrl" normalize={(value) => value.trim()} rules={[{ required: registerHospitel?.imageUrl ? !registerHospitel?.imageUrl : !imageData , message: 'กรุณาอัปโหลดไฟล์รูปภาพ'}]}>
                           <div className="mb-2  font-bold">
                               อัพโหลดภาพ Hospital (สูงสุด 3 รูป)
                           </div>
                           <div className="pic-wrapper flex justify-between">
-                              {(registerHospitel?.imageUrl ?? imageData)?.map((items: any) => <img src={items} style={{ width: 90, height: 90, marginBottom: 5 }} alt="" />)}
+                              {(imageData ?? registerHospitel?.imageUrl )?.map((items: any) => <img src={items} style={{ width: 90, height: 90, marginBottom: 5 }} alt="" />)}
                 
                           </div>
                           <UploadHospitelImage setImageData={setImageData} />
@@ -405,7 +406,7 @@ export const RegisterModal = observer(({ setStep, isShow, onClose }: RegisterMod
                           </Form.Item>
                       </div>
 
-                      <Form.Item name="documentUrl" rules={[{ required: true , message: 'กรุณาอัปโหลดเอกสารอนุญาตการเปิด Hospitel'}]}>
+                      <Form.Item name="documentUrl" rules={[{ required: docFile , message: 'กรุณาอัปโหลดเอกสารอนุญาตการเปิด Hospitel'}]}>
                           <div className="mb-2 font-bold">
                               อัปโหลดเอกสารอนุญาตการเปิด Hospitel
                           </div>
