@@ -1,14 +1,12 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 
-import { Global, css, jsx } from '@emotion/react';
-import React, { useState, useEffect } from 'react';
-import { hospitelStore } from 'store/hospitelStore';
-import { EmailButton, LoginButton } from './Button';
+import { jsx } from '@emotion/react';
+import React, { useState } from 'react';
+import { LoginButton } from './Button';
 import { LoginModal } from './LoginModal';
 
 export const UserStep = () => {
-    const { userLogin } = hospitelStore;
     const [onLoginClick, setOnLoginClick] = useState(true);
     
     const handleClick = (e: any) => {

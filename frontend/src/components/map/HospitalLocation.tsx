@@ -35,7 +35,7 @@ export const HospitalLocation = observer(
     const [selectedLocation, setSelectedLocation] = useState(false);
     const [searchBox, setSearchBox] = useState<any>(null);
     const [center, setCenter] = useState<google.maps.LatLng>();
-    const [map, setMap] = useState(null);
+    const [_map, setMap] = useState(null);
 
     const ConfirmButton = () => {
       return (

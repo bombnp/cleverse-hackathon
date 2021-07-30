@@ -137,23 +137,10 @@ export const UpdateHospitelInfo = observer(({ isShow, onClose }: UpdateHospitelI
                   maxPrice: loginHospitel?.price.maxPrice,
                   minPrice: loginHospitel?.price.minPrice,
                   perDay: loginHospitel?.price.perDays,
-                //   price: {
-                //       maxPrice: loginHospitel?.price.maxPrice,
-                //       minPrice: loginHospitel?.price.minPrice,
-                //       perDays: loginHospitel?.price.perDays,
-                //   },
                   imageUrl: loginHospitel?.imageUrls,
                   documentUrl: loginHospitel?.documentUrl,
-                //   address: {
-                //       province: loginHospitel?.address.province,
-                //       district: loginHospitel?.address.district,
-                //       address: loginHospitel?.address.address,
-                //       latitude: loginHospitel?.address.latitude,
-                //       longitude: loginHospitel?.address.latitude,
-                //   },
-                //   province: loginHospitel?.address.province,
+
                   address: loginHospitel?.address.address,
-                //   district: loginHospitel?.address.district,
 
                 phone: loginHospitel?.contact.phone,
 

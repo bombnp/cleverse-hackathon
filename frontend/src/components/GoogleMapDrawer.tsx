@@ -3,7 +3,6 @@
 
 import React, { useState } from 'react';
 import { Drawer } from 'antd';
-import logo from './Hospitel_Pic.jpg';
 import { Global, css, jsx } from '@emotion/react';
 import { observer } from 'mobx-react-lite';
 import { hospitelStore } from 'store/hospitelStore';
@@ -134,9 +133,12 @@ export const GoogleMapDrawer = observer(({ visible, setVisible, distance, durati
                                 </div>
                                 <div>{selectedHospitel?.facility ?? '-'}</div>
                             </div>
-                            <a href="#">
+                        <div>
+                            <div className="flex font-bold text-lg text-gray-700">
                                 <EarthIcon className="-ml-4 mr-2" />
-                            </a>
+                            </div>
+                            <div>{selectedHospitel?.contact.social ?? '-'}</div>
+                            </div>
                         </div>
                     }
                     <div className="flex items-center w-full justify-center mt-6">
